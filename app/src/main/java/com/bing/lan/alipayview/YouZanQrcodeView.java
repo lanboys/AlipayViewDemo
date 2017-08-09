@@ -14,6 +14,10 @@ import android.view.View;
 
 /**
  * Created by 520 on 2017/6/20.
+ * <p>
+ * <p>
+ * https://github.com/lanboys/AndroidStudy
+ * http://blog.csdn.net/wingichoy/article/details/50500479
  */
 
 public class YouZanQrcodeView extends View {
@@ -210,13 +214,14 @@ public class YouZanQrcodeView extends View {
         //log.i("drawCenterRect(): height: " + height);
 
         // 除了中间的识别区域，其他区域都将蒙上一层半透明的图层
-        //canvas.drawRect(0, 0, width, mRectF.top, mBackgroundPaint);// 上面
-        //canvas.drawRect(0, mRectF.top, mRectF.left, mRectF.bottom + 1, mBackgroundPaint);// 左边
-        //canvas.drawRect(mRectF.right + 1, mRectF.top, width, mRectF.bottom + 1, mBackgroundPaint); // 右边
-        //canvas.drawRect(0, mRectF.bottom + 1, width, height, mBackgroundPaint);// 下面
+        canvas.drawRect(0, 0, width, mRectF.top, mBackgroundPaint);// 上面
+        canvas.drawRect(0, mRectF.top, mRectF.left, mRectF.bottom + 1, mBackgroundPaint);// 左边
+        canvas.drawRect(mRectF.right + 1, mRectF.top, width, mRectF.bottom + 1, mBackgroundPaint); // 右边
+        canvas.drawRect(0, mRectF.bottom + 1, width, height, mBackgroundPaint);// 下面
 
-        canvas.drawRect(0, 0, width, height, mBackgroundPaint);
-        canvas.drawRect(mRectF.left, mRectF.top, mRectF.right, mRectF.bottom, mQrcodePaint);
+        //功能类似上面 但是有区别
+        //canvas.drawRect(0, 0, width, height, mBackgroundPaint);
+        //canvas.drawRect(mRectF.left, mRectF.top, mRectF.right, mRectF.bottom, mQrcodePaint);
 
         // 四个角落的三角
         //firstLine.startPoint.x = mRectF.left + triangleLength;
