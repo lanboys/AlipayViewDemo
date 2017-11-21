@@ -22,44 +22,50 @@ import android.view.View;
 
 public class YouZanQrcodeView extends View {
 
-    private Paint mPaint;
-    private RectF mRectF;
-    private Path mPath;
-    private Path mTrianglePath;
-
-    private float mCenterX, mCenterY;
-    private float mViewCenterX, mViewCenterY;
-    private float originLength = 300;// 矩形长度一半
-    private float currentLength = originLength;// 矩形长度一半
-
-    private Paint mBackgroundPaint;                                                              //背景色画笔
-    private Paint mQrcodePaint;                                                              //背景色画笔
-    private Paint trianglePaint;
+    protected final LogUtil log = LogUtil.getLogUtil(getClass(), LogUtil.LOG_VERBOSE);
     private final int triangleColor = Color.parseColor("#f39800");                        //边角的颜色
     private final int triangleLength = dp2px(20);                                         //每个角的点距离
     private final int triangleWidth = dp2px(2);                                           //每个角的点宽度
-
-    private Paint textPaint;
-    private Paint linePaint;
     private final int backgroundColor = Color.parseColor("#60000000");                          //蒙在摄像头上面区域的半透明颜色
     private final int qrcodeColor = Color.parseColor("#ffffffff");                          //蒙在摄像头上面区域的半透明颜色
     private final int lineColor = Color.parseColor("#f39800");                            //中间线的颜色
     private final int textColor = Color.parseColor("#CCCCCC");                            //文字的颜色
-
     private final int textMarinTop = dp2px(30);                                           //文字距离识别框的距离
+    float startX;
+    float startY;
+    float inX;
+    float inY;
+    private Paint mPaint;
+    private RectF mRectF;
+    private Path mPath;
+    private Path mTrianglePath;
+    private float mCenterX, mCenterY;
+    private float mViewCenterX, mViewCenterY;
+    private float originLength = 300;// 矩形长度一半
+    private float currentLength = originLength;// 矩形长度一半
+    private Paint mBackgroundPaint;                                                              //背景色画笔
+    private Paint mQrcodePaint;                                                              //背景色画笔
+    private Paint trianglePaint;
+    private Paint textPaint;
+    private Paint linePaint;
+    private Line firstLine;// 第一条线
+    private Line secondLine;// 第二条线
 
-    private int dp2px(int dp) {
-        float density = getContext().getResources().getDisplayMetrics().density;
-        return (int) (dp * density + 0.5f);
-    }
+    //getX()是表示Widget相对于自身左上角的x坐标,
+    //而getRawX()是表示相对于屏幕左上角的x坐标值
+    //(注意:这个屏幕左上角是手机屏幕左上角,不管activity是否有titleBar或是否全屏幕)
 
     public YouZanQrcodeView(Context context) {
         super(context);
     }
-
     public YouZanQrcodeView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         initView();
+    }
+
+    private int dp2px(int dp) {
+        float density = getContext().getResources().getDisplayMetrics().density;
+        return (int) (dp * density + 0.5f);
     }
 
     private void initView() {
@@ -103,21 +109,6 @@ public class YouZanQrcodeView extends View {
         firstLine = new Line(point1, point2);
         secondLine = new Line(point2, point3);
     }
-
-    private Line firstLine;// 第一条线
-    private Line secondLine;// 第二条线
-
-    protected final LogUtil log = LogUtil.getLogUtil(getClass(), LogUtil.LOG_VERBOSE);
-
-    //getX()是表示Widget相对于自身左上角的x坐标,
-    //而getRawX()是表示相对于屏幕左上角的x坐标值
-    //(注意:这个屏幕左上角是手机屏幕左上角,不管activity是否有titleBar或是否全屏幕)
-
-    float startX;
-    float startY;
-
-    float inX;
-    float inY;
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -180,6 +171,12 @@ public class YouZanQrcodeView extends View {
         } else if (currentLength > originLength) {
             currentLength = originLength;
         }
+
+        float v = currentLength / originLength*100;
+        log.i("resetLength(): currentLength11111111111111111: " + v);
+        log.i("resetLength(): currentLength11111111111111111: " + (int) v);
+
+        mBackgroundPaint.setAlpha((int) v);
     }
 
     @Override
