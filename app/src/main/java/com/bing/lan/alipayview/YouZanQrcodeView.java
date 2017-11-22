@@ -26,6 +26,7 @@ public class YouZanQrcodeView extends View {
     private final int triangleColor = Color.parseColor("#f39800");                        //边角的颜色
     private final int triangleLength = dp2px(20);                                         //每个角的点距离
     private final int triangleWidth = dp2px(2);                                           //每个角的点宽度
+    private final int centerPointRadius = dp2px(8);                                           //每个角的点宽度
     private final int backgroundColor = Color.parseColor("#60000000");                          //蒙在摄像头上面区域的半透明颜色
     private final int qrcodeColor = Color.parseColor("#ffffffff");                          //蒙在摄像头上面区域的半透明颜色
     private final int lineColor = Color.parseColor("#f39800");                            //中间线的颜色
@@ -37,19 +38,25 @@ public class YouZanQrcodeView extends View {
     float inY;
     private Paint mPaint;
     private RectF mRectF;
-    private Path mPath;
     private Path mTrianglePath;
     private float mCenterX, mCenterY;
     private float mViewCenterX, mViewCenterY;
-    private float originLength = 300;// 矩形长度一半
-    private float currentLength = originLength;// 矩形长度一半
+    private float originLengthX = 300;// 矩形长度一半
+    private float currentLengthX = originLengthX;// 矩形长度一半
+    private float originLengthY = 300;// 矩形长度一半
+    private float currentLengthY = originLengthY;// 矩形长度一半
+
     private Paint mBackgroundPaint;                                                              //背景色画笔
     private Paint mQrcodePaint;                                                              //背景色画笔
     private Paint trianglePaint;
+    private Paint centerPointPaint;
     private Paint textPaint;
     private Paint linePaint;
     private Line firstLine;// 第一条线
     private Line secondLine;// 第二条线
+
+    private float toplimitY = 400;//以初始中心位置为准
+    private float lowerlimitY = 400;//以初始中心位置为准
 
     //getX()是表示Widget相对于自身左上角的x坐标,
     //而getRawX()是表示相对于屏幕左上角的x坐标值
@@ -58,6 +65,7 @@ public class YouZanQrcodeView extends View {
     public YouZanQrcodeView(Context context) {
         super(context);
     }
+
     public YouZanQrcodeView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         initView();
@@ -79,17 +87,23 @@ public class YouZanQrcodeView extends View {
         mPaint.setColor(getResources().getColor(R.color.holo_blue_light));
         //绘制范围
         mRectF = new RectF();
-        mPath = new Path();
-
-        // 四个角落的三角
-        mTrianglePath = new Path();
 
         //周围背景灰
         mBackgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mBackgroundPaint.setColor(backgroundColor);
+
         //二维码扫描框
         mQrcodePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mQrcodePaint.setColor(qrcodeColor);
+
+        //中心点画笔
+        centerPointPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        centerPointPaint.setColor(triangleColor);
+        centerPointPaint.setStrokeWidth(centerPointRadius);
+        centerPointPaint.setStyle(Paint.Style.STROKE);
+
+        // 四个角落的三角
+        mTrianglePath = new Path();
 
         trianglePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         trianglePaint.setColor(triangleColor);
@@ -141,13 +155,50 @@ public class YouZanQrcodeView extends View {
         }
         //mCenterX = event.getX();
         mCenterY += inY;
+        float toplimit = mViewCenterY - toplimitY;
+        float lowerlimit = mViewCenterY + lowerlimitY;
+        log.i("onTouchEvent() mViewCenterY - toplimitY: " + toplimit);
+        log.i("onTouchEvent() mViewCenterY + lowerlimitY: " + lowerlimit);
+        log.i("onTouchEvent() mCenterY: " + mCenterY);
+
+        // 控制y轴中心上下限
+        if (mCenterY < toplimit) {
+            mCenterY = toplimit;
+        }
+
+        if (mCenterY > lowerlimit) {
+            mCenterY = lowerlimit;
+        }
 
         resetLength();
 
-        mRectF.set(mCenterX - currentLength, mCenterY - currentLength, mCenterX + currentLength, mCenterY + currentLength);
+        float left = mCenterX - currentLengthX;
+        float top = mCenterY - currentLengthY;
+        float right = mCenterX + currentLengthX;
+        float bottom = mCenterY + currentLengthY;
+
+        log.i("onTouchEvent() left: " + left);
+        log.i("onTouchEvent() top:  " + top);
+        log.i("onTouchEvent() right: " + right);
+        log.i("onTouchEvent() bottom: " + bottom);
+
+        // 控制y轴四边形 上下限
+        if (top < toplimit) {
+            top = toplimit;
+        }
+
+        if (bottom > lowerlimit) {
+            bottom = lowerlimit;
+        }
+
+        log.i("onTouchEvent() left1: " + left);
+        log.i("onTouchEvent() top1:  " + top);
+        log.i("onTouchEvent() right1: " + right);
+        log.i("onTouchEvent() bottom1: " + bottom);
+
+        mRectF.set(left, top, right, bottom);
 
         invalidate();
-        log.i("onTouchEvent(): ");
         log.i("onTouchEvent(): ");
 
         //float rawX = event.getRawX();
@@ -160,19 +211,30 @@ public class YouZanQrcodeView extends View {
         return true;
     }
 
+    /**
+     * 重置长度
+     */
     private void resetLength() {
-        currentLength = (mCenterY / mViewCenterY) * originLength;
+        currentLengthX = (mCenterY / mViewCenterY) * originLengthX;
+        currentLengthY = (mCenterY / mViewCenterY) * originLengthY;
         log.i("resetLength(): mViewCenterY: " + mViewCenterY);
         log.i("resetLength(): mCenterY: " + mCenterY);
-        log.i("resetLength(): currentLength: " + currentLength);
+        log.i("resetLength(): currentLengthX: " + currentLengthX);
+        //log.i("resetLength(): currentLengthY: " + currentLengthY);
 
-        if (currentLength < 80) {
-            currentLength = 80;
-        } else if (currentLength > originLength) {
-            currentLength = originLength;
+        if (currentLengthX < 80) {
+            currentLengthX = 80;
+        } else if (currentLengthX > originLengthX) {
+            currentLengthX = originLengthX;
         }
 
-        float v = currentLength / originLength*100;
+        if (currentLengthY < 80) {
+            currentLengthY = 80;
+        } else if (currentLengthY > originLengthY) {
+            currentLengthY = originLengthY;
+        }
+
+        float v = currentLengthX / originLengthX * 100;
         log.i("resetLength(): currentLength11111111111111111: " + v);
         log.i("resetLength(): currentLength11111111111111111: " + (int) v);
 
@@ -195,7 +257,7 @@ public class YouZanQrcodeView extends View {
         mCenterY = mViewCenterY;
 
         // 重置矩形
-        mRectF.set(mCenterX - currentLength, mCenterY - currentLength, mCenterX + currentLength, mCenterY + currentLength);
+        mRectF.set(mCenterX - currentLengthX, mCenterY - currentLengthY, mCenterX + currentLengthX, mCenterY + currentLengthY);
     }
 
     @Override
@@ -251,6 +313,9 @@ public class YouZanQrcodeView extends View {
         mTrianglePath.lineTo(mRectF.right - triangleWidth / 2, mRectF.bottom - triangleWidth / 2);
         mTrianglePath.lineTo(mRectF.right - triangleWidth / 2, mRectF.bottom - triangleLength);
         canvas.drawPath(mTrianglePath, trianglePaint);
+
+        canvas.drawPoint(mCenterX, mCenterY, centerPointPaint);//方点
+        //canvas.drawCircle(mCenterX, mCenterY, 15, centerPointPaint);//圆点
     }
 
     private void drawLine(Canvas canvas, Paint paint, Path path, Line firstLine, Line secondLine) {
