@@ -2,12 +2,14 @@ package com.bing.lan.alipayview;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -66,6 +68,7 @@ public class YouZanQrcodeView extends RelativeLayout {
     private float onClickStartX, onClickStartY;
     private OnRectCenterScrollListener mOnRectCenterScrollListener;
     private boolean isActionMoveQrcode = false;
+    private int lineOffsetCount = 0;
 
     public YouZanQrcodeView(Context context) {
         super(context);
@@ -181,7 +184,6 @@ public class YouZanQrcodeView extends RelativeLayout {
                         mOnTopBottomClickListener.onTopClick(this);
                     }
                     onTopBottomClickReset();
-
                 }
                 // 起始位置都在范围内才起作用
                 if (startY > mViewHeight * 0.75f && onClickStartY > mViewHeight * 0.75f) {
@@ -229,7 +231,7 @@ public class YouZanQrcodeView extends RelativeLayout {
         ValueAnimator valueAnimator = ValueAnimator.ofFloat(dy, 0);
         log.i("onAnimationUpdate() dy: " + dy);
 
-        valueAnimator.setDuration(1500);
+        valueAnimator.setDuration(500);
 
         //http://easings.net/zh-cn
         //http://blog.csdn.net/gzejia/article/details/51063564
@@ -458,6 +460,29 @@ public class YouZanQrcodeView extends RelativeLayout {
 
         canvas.drawLine(0, getLowerLimitY(), mViewWidth, getLowerLimitY(), centerPointPaint);
         canvas.drawLine(0, getTopLimitY(), mViewWidth, getTopLimitY(), centerPointPaint);
+
+        RectF frame = mRectF;
+
+        //循环划线，从上到下
+        if (lineOffsetCount > frame.bottom - frame.top - dp2px(10)) {
+            lineOffsetCount = 0;
+        } else {
+            lineOffsetCount = lineOffsetCount + 6;
+            //            canvas.drawLine(frame.left, frame.top + lineOffsetCount, frame.right, frame.top + lineOffsetCount, linePaint);    //画一条红色的线
+            RectF lineRect = new RectF();
+            lineRect.left = frame.left;
+            lineRect.top = frame.top + lineOffsetCount;
+            lineRect.right = frame.right;
+            lineRect.bottom = lineRect.top + dp2px(10);
+
+            //mBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_guide1).copy(Bitmap.Config.ARGB_8888, true);
+            BitmapDrawable drawable = (BitmapDrawable) (getResources().getDrawable(R.drawable.scanline_yellow));
+            Bitmap bitmap = drawable.getBitmap();
+
+            canvas.drawBitmap(bitmap, null, lineRect, linePaint);
+        }
+        //postInvalidateDelayed(10L);//区别？？
+        postInvalidateDelayed(10L, (int) frame.left, (int) frame.top, (int) frame.right, (int) frame.bottom);
     }
 
     private void drawLine(Canvas canvas, Paint paint, Path path, Line firstLine, Line secondLine) {

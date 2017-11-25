@@ -15,6 +15,7 @@ public class YouZanActivity extends AppCompatActivity {
     TextView text2;
     float length = 600;
 
+    AutoScannerView mAutoScannerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +25,10 @@ public class YouZanActivity extends AppCompatActivity {
         youZan = (YouZanQrcodeView) findViewById(R.id.youZan);
         text1 = (TextView) findViewById(R.id.text1);
         text2 = (TextView) findViewById(R.id.text2);
+
+        mAutoScannerView = (AutoScannerView) findViewById(R.id.autoView);
+
+        mAutoScannerView.setCameraManager(new CameraManager());
 
         text1.setTranslationY(length);
         text2.setTranslationY(length);
