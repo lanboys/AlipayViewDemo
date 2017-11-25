@@ -8,29 +8,30 @@
     tools:context="com.bing.lan.alipayview.YouZanActivity">
 
 
-    <!--<TextView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="120dp"-->
-        <!--android:layout_marginTop="30dp"-->
-        <!--android:gravity="center"-->
-        <!--android:background="#dd97d9"-->
-        <!--android:onClick="onBtnView"-->
-        <!--android:text="我是钉子户"-->
-        <!--android:textSize="40sp"/>-->
-
-
     <com.bing.lan.alipayview.YouZanQrcodeView
+        android:id="@+id/youZan"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-    />
+    >
 
-    <!--<TextView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="120dp"-->
-        <!--android:layout_marginTop="330dp"-->
-        <!--android:background="#dd97d9"-->
-        <!--android:gravity="center"-->
-        <!--android:onClick="onBtnView"-->
-        <!--android:text="我是钉子户"-->
-        <!--android:textSize="40sp"/>-->
+        <TextView
+            android:id="@+id/text1"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:gravity="center"
+            android:text="我是钉子户1"
+            android:textSize="40sp"/>
+
+        <TextView
+            android:id="@+id/text2"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="我是钉子户2"
+            android:textSize="40sp"/>
+
+    </com.bing.lan.alipayview.YouZanQrcodeView>
+
+
 </RelativeLayout>

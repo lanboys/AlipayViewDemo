@@ -1,5 +1,6 @@
 package com.bing.lan.alipayview;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -10,7 +11,8 @@ import android.graphics.RectF;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.view.View;
+import android.view.animation.LinearInterpolator;
+import android.widget.RelativeLayout;
 
 /**
  * Created by 520 on 2017/6/20.
@@ -20,7 +22,7 @@ import android.view.View;
  * http://blog.csdn.net/wingichoy/article/details/50500479
  */
 
-public class YouZanQrcodeView extends View {
+public class YouZanQrcodeView extends RelativeLayout {
 
     protected final LogUtil log = LogUtil.getLogUtil(getClass(), LogUtil.LOG_VERBOSE);
     private final int triangleColor = Color.parseColor("#f39800");                        //边角的颜色
@@ -32,20 +34,19 @@ public class YouZanQrcodeView extends View {
     private final int lineColor = Color.parseColor("#f39800");                            //中间线的颜色
     private final int textColor = Color.parseColor("#CCCCCC");                            //文字的颜色
     private final int textMarinTop = dp2px(30);                                           //文字距离识别框的距离
-    float startX;
-    float startY;
-    float inX;
-    float inY;
+    private float startX, startY, inX, inY;
+
+    private OnTopBottomClickListener mOnTopBottomClickListener;
     private Paint mPaint;
     private RectF mRectF;
     private Path mTrianglePath;
-    private float mCenterX, mCenterY;
-    private float mViewCenterX, mViewCenterY;
+    private float mCenterX, mCenterY;//矩形 的中心点
+    private float mViewCenterX, mViewCenterY;//View 的中心点
     private float originLengthX = 300;// 矩形长度一半
     private float currentLengthX = originLengthX;// 矩形长度一半
     private float originLengthY = 300;// 矩形长度一半
     private float currentLengthY = originLengthY;// 矩形长度一半
-
+    private float mViewHeight, mViewWidth;//View 的大小
     private Paint mBackgroundPaint;                                                              //背景色画笔
     private Paint mQrcodePaint;                                                              //背景色画笔
     private Paint trianglePaint;
@@ -55,12 +56,16 @@ public class YouZanQrcodeView extends View {
     private Line firstLine;// 第一条线
     private Line secondLine;// 第二条线
 
-    private float toplimitY = 400;//以初始中心位置为准
-    private float lowerlimitY = 400;//以初始中心位置为准
+    //private float toplimitY;//以初始中心位置为准
+
+    //private float lowerlimitY;//以初始中心位置为准
 
     //getX()是表示Widget相对于自身左上角的x坐标,
     //而getRawX()是表示相对于屏幕左上角的x坐标值
     //(注意:这个屏幕左上角是手机屏幕左上角,不管activity是否有titleBar或是否全屏幕)
+    private float onClickStartX, onClickStartY;
+    private OnRectCenterScrollListener mOnRectCenterScrollListener;
+    private boolean isActionMoveQrcode = false;
 
     public YouZanQrcodeView(Context context) {
         super(context);
@@ -68,6 +73,7 @@ public class YouZanQrcodeView extends View {
 
     public YouZanQrcodeView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        setWillNotDraw(false);
         initView();
     }
 
@@ -125,90 +131,144 @@ public class YouZanQrcodeView extends View {
     }
 
     @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        return super.dispatchTouchEvent(event);
+    }
+
+    @Override
     public boolean onTouchEvent(MotionEvent event) {
         log.i("onTouchEvent(): ---------------------------");
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                log.i("onTouchEvent()status:状态  按下");
+                isActionMoveQrcode = false;
+
                 startX = event.getX();
                 startY = event.getY();
 
-                log.i("onTouchEvent(): startX: " + startX);
-                log.i("onTouchEvent(): startY: " + startY);
+                onClickStartX = startX;
+                onClickStartY = startY;
 
-                log.i("onTouchEvent(): 按下");
                 break;
+
             case MotionEvent.ACTION_MOVE:
+                log.i("onTouchEvent()status:状态 移动");
+                isActionMoveQrcode = true;
+
                 inX = event.getX() - startX;
                 inY = event.getY() - startY;
 
                 startX = event.getX();
                 startY = event.getY();
+                // 重新计算位置
+                resetView();
+                invalidate();
 
-                log.i("onTouchEvent(): startX: " + startX);
-                log.i("onTouchEvent(): startY: " + startY);
+                break;
+            case MotionEvent.ACTION_UP:
+                log.i("onTouchEvent()status:状态 松手");
 
-                log.i("onTouchEvent(): inX: " + inX);
-                log.i("onTouchEvent(): inY: " + inY);
+                //复原
+                inY = 0;
+                inX = 0;
 
-                log.i("onTouchEvent(): 移动");
+                startX = event.getX();
+                startY = event.getY();
+
+                // 起始位置都在范围内才起作用
+                if (startY < mViewHeight * 0.25f && onClickStartY < mViewHeight * 0.25f) {
+                    if (mOnTopBottomClickListener != null) {
+                        mOnTopBottomClickListener.onTopClick(this);
+                    }
+                }
+                // 起始位置都在范围内才起作用
+                if (startY > mViewHeight * 0.75f && onClickStartY > mViewHeight * 0.75f) {
+                    if (mOnTopBottomClickListener != null) {
+                        mOnTopBottomClickListener.onBottomClick(this);
+                    }
+                }
+                if (isActionMoveQrcode) {
+                    resetLocation();
+                }
                 break;
         }
-        //mCenterX = event.getX();
+        //log.i("onTouchEvent(): inX: " + inX);
+        //log.i("onTouchEvent(): inY: " + inY);
+        //
+        //log.i("onTouchEvent(): startX: " + startX);
+        //log.i("onTouchEvent(): startY: " + startY);
+        //boolean b = super.onTouchEvent(event);
+        return true;
+    }
+
+    private void resetLocation() {
+        float centerLine = getTopLimitY() + (getLowerLimitY() - getTopLimitY()) / 2;
+        if (mCenterY < centerLine) {
+            doAnimator(mCenterY - getTopLimitY(), true);
+        } else {
+            doAnimator(getLowerLimitY() - mCenterY, false);
+        }
+    }
+
+    private void doAnimator(float dy, final boolean isToUp) {
+        if (dy == 0) {
+            return;
+        }
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(dy, 0);
+        log.i("onAnimationUpdate() dy: " + dy);
+
+        valueAnimator.setDuration(30);
+        valueAnimator.setInterpolator(new LinearInterpolator());
+
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float animatedValue = (float) animation.getAnimatedValue();
+
+                log.i("onAnimationUpdate():------------------ ");
+                log.i("onAnimationUpdate() animatedValue: " + animatedValue);
+                log.i("onAnimationUpdate() mCenterY: " + mCenterY);
+
+                if (isToUp) {
+                    mCenterY = getTopLimitY() + animatedValue;
+                    log.i("onAnimationUpdate() getTopLimitY: " + getTopLimitY());
+                } else {
+                    mCenterY = getLowerLimitY() - animatedValue;
+                    log.i("onAnimationUpdate() getLowerLimitY: " + getLowerLimitY());
+                }
+
+                log.i("onAnimationUpdate() mCenterY: " + mCenterY);
+
+                resetView();
+
+                postInvalidate();
+            }
+        });
+
+        valueAnimator.start();
+    }
+
+    private void resetView() {
+        resetRectCenter();
+        resetLength();
+        resetRect();
+    }
+
+    private void resetRectCenter() {
+
         mCenterY += inY;
-        float toplimit = mViewCenterY - toplimitY;
-        float lowerlimit = mViewCenterY + lowerlimitY;
-        log.i("onTouchEvent() mViewCenterY - toplimitY: " + toplimit);
-        log.i("onTouchEvent() mViewCenterY + lowerlimitY: " + lowerlimit);
+        log.i("onTouchEvent() getTopLimitY: " + getTopLimitY());
+        log.i("onTouchEvent() getLowerLimitY: " + getLowerLimitY());
         log.i("onTouchEvent() mCenterY: " + mCenterY);
 
         // 控制y轴中心上下限
-        if (mCenterY < toplimit) {
-            mCenterY = toplimit;
+        if (mCenterY < getTopLimitY()) {
+            mCenterY = getTopLimitY();
         }
 
-        if (mCenterY > lowerlimit) {
-            mCenterY = lowerlimit;
+        if (mCenterY > getLowerLimitY()) {
+            mCenterY = getLowerLimitY();
         }
-
-        resetLength();
-
-        float left = mCenterX - currentLengthX;
-        float top = mCenterY - currentLengthY;
-        float right = mCenterX + currentLengthX;
-        float bottom = mCenterY + currentLengthY;
-
-        log.i("onTouchEvent() left: " + left);
-        log.i("onTouchEvent() top:  " + top);
-        log.i("onTouchEvent() right: " + right);
-        log.i("onTouchEvent() bottom: " + bottom);
-
-        // 控制y轴四边形 上下限
-        if (top < toplimit) {
-            top = toplimit;
-        }
-
-        if (bottom > lowerlimit) {
-            bottom = lowerlimit;
-        }
-
-        log.i("onTouchEvent() left1: " + left);
-        log.i("onTouchEvent() top1:  " + top);
-        log.i("onTouchEvent() right1: " + right);
-        log.i("onTouchEvent() bottom1: " + bottom);
-
-        mRectF.set(left, top, right, bottom);
-
-        invalidate();
-        log.i("onTouchEvent(): ");
-
-        //float rawX = event.getRawX();
-        //float rawY = event.getRawY();
-        //log.i("onTouchEvent(): rawX: " + rawX);
-        //log.i("onTouchEvent(): rawY: " + rawY);
-
-        boolean b = super.onTouchEvent(event);
-        //log.i("onTouchEvent(): boolean: " + b);
-        return true;
     }
 
     /**
@@ -241,9 +301,53 @@ public class YouZanQrcodeView extends View {
         mBackgroundPaint.setAlpha((int) v);
     }
 
+    private void resetRect() {
+        float left = mCenterX - currentLengthX;
+        float top = mCenterY - currentLengthY;
+        float right = mCenterX + currentLengthX;
+        float bottom = mCenterY + currentLengthY;
+
+        log.i("onTouchEvent() left: " + left);
+        log.i("onTouchEvent() top:  " + top);
+        log.i("onTouchEvent() right: " + right);
+        log.i("onTouchEvent() bottom: " + bottom);
+
+        // 控制y轴四边形 上下限
+        //if (top < toplimit) {
+        //    top = toplimit;
+        //}
+        //
+        //if (bottom > lowerlimit) {
+        //    bottom = lowerlimit;
+        //}
+
+        mRectF.set(left, top, right, bottom);
+
+        if (mOnRectCenterScrollListener != null) {
+
+            float centerYRatio = (mCenterY - getTopLimitY()) / (getLowerLimitY() - getTopLimitY());
+            log.i("onRectCenterScroll() ----------------------");
+            log.i("onRectCenterScroll() centerY: " + mCenterY);
+            log.i("onRectCenterScroll() centerYRatio: " + centerYRatio);
+
+            mOnRectCenterScrollListener.onRectCenterScroll(this, mCenterX, mCenterY, 0, centerYRatio);
+        }
+    }
+
+    private float getTopLimitY() {
+        return mViewHeight * 0.2f;
+    }
+
+    private float getLowerLimitY() {
+        return mViewHeight * 0.5f;
+    }
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
+        mViewHeight = h;
+        mViewWidth = w;
+
         log.i("onSizeChanged(): w " + w);
         log.i("onSizeChanged(): h " + h);
         log.i("onSizeChanged(): oldw " + oldw);
@@ -260,8 +364,18 @@ public class YouZanQrcodeView extends View {
         mRectF.set(mCenterX - currentLengthX, mCenterY - currentLengthY, mCenterX + currentLengthX, mCenterY + currentLengthY);
     }
 
+    /**
+     * ViewGroup为什么不会调用onDraw
+     * http://blog.csdn.net/leehong2005/article/details/7299471
+     * 1）ViewGroup默认情况下，会被设置成WILL_NOT_DRAW，这是从性能考虑，这样一来，onDraw就不会被调用了。
+     * 2）如果我们要重要一个ViweGroup的onDraw方法，有两种方法：
+     * 1，在构造函数里面，给其设置一个颜色，如#00000000。
+     * 2，在构造函数里面，调用setWillNotDraw(false)，去掉其WILL_NOT_DRAW flag。
+     */
     @Override
     protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        log.i("onDraw(): 绘制");
         drawCenterRect(canvas);
     }
 
@@ -324,6 +438,26 @@ public class YouZanQrcodeView extends View {
         path.lineTo(firstLine.endPoint.x, firstLine.endPoint.y);
         path.lineTo(secondLine.endPoint.x, secondLine.endPoint.y);
         canvas.drawPath(path, paint);
+    }
+
+    public void setOnTopBottomClickListener(OnTopBottomClickListener onTopBottomClickListener) {
+        mOnTopBottomClickListener = onTopBottomClickListener;
+    }
+
+    public void setOnRectCenterScrollListener(OnRectCenterScrollListener onRectCenterScrollListener) {
+        mOnRectCenterScrollListener = onRectCenterScrollListener;
+    }
+
+    interface OnTopBottomClickListener {
+
+        void onTopClick(YouZanQrcodeView view);
+
+        void onBottomClick(YouZanQrcodeView view);
+    }
+
+    interface OnRectCenterScrollListener {
+
+        void onRectCenterScroll(YouZanQrcodeView view, float centerX, float centerY, float centerXRatio, float centerYRatio);
     }
 
     class Line {
