@@ -11,7 +11,7 @@ import android.graphics.RectF;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.view.animation.LinearInterpolator;
+import android.view.animation.OvershootInterpolator;
 import android.widget.RelativeLayout;
 
 /**
@@ -180,12 +180,15 @@ public class YouZanQrcodeView extends RelativeLayout {
                     if (mOnTopBottomClickListener != null) {
                         mOnTopBottomClickListener.onTopClick(this);
                     }
+                    onTopBottomClickReset();
+
                 }
                 // 起始位置都在范围内才起作用
                 if (startY > mViewHeight * 0.75f && onClickStartY > mViewHeight * 0.75f) {
                     if (mOnTopBottomClickListener != null) {
                         mOnTopBottomClickListener.onBottomClick(this);
                     }
+                    onTopBottomClickReset();
                 }
                 if (isActionMoveQrcode) {
                     resetLocation();
@@ -199,6 +202,15 @@ public class YouZanQrcodeView extends RelativeLayout {
         //log.i("onTouchEvent(): startY: " + startY);
         //boolean b = super.onTouchEvent(event);
         return true;
+    }
+
+    private void onTopBottomClickReset() {
+        float centerLine = getTopLimitY() + (getLowerLimitY() - getTopLimitY()) / 2;
+        if (mCenterY < centerLine) {
+            doAnimator(getLowerLimitY() - getTopLimitY(), false);
+        } else {
+            doAnimator(getLowerLimitY() - getTopLimitY(), true);
+        }
     }
 
     private void resetLocation() {
@@ -217,8 +229,21 @@ public class YouZanQrcodeView extends RelativeLayout {
         ValueAnimator valueAnimator = ValueAnimator.ofFloat(dy, 0);
         log.i("onAnimationUpdate() dy: " + dy);
 
-        valueAnimator.setDuration(30);
-        valueAnimator.setInterpolator(new LinearInterpolator());
+        valueAnimator.setDuration(1500);
+
+        //http://easings.net/zh-cn
+        //http://blog.csdn.net/gzejia/article/details/51063564
+        //http://blog.csdn.net/harvic880925/article/details/50598322
+        //https://my.oschina.net/banxi/blog/135633?fromerr=uv67kzf9#OSC_h2_7
+        //http://www.wolframalpha.com/input/?i=x%5E(2*3)(0%3Cx%3C%3D1)
+        //http://blog.csdn.net/u011835956/article/details/51783025
+
+        //valueAnimator.setInterpolator(new LinearInterpolator());
+        //valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        //valueAnimator.setInterpolator(new AnticipateInterpolator());
+        //valueAnimator.setInterpolator(new AnticipateOvershootInterpolator());
+        valueAnimator.setInterpolator(new OvershootInterpolator());
+        //valueAnimator.setInterpolator(new LinearInterpolator());
 
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -262,13 +287,13 @@ public class YouZanQrcodeView extends RelativeLayout {
         log.i("onTouchEvent() mCenterY: " + mCenterY);
 
         // 控制y轴中心上下限
-        if (mCenterY < getTopLimitY()) {
-            mCenterY = getTopLimitY();
-        }
-
-        if (mCenterY > getLowerLimitY()) {
-            mCenterY = getLowerLimitY();
-        }
+        //if (mCenterY < getTopLimitY()) {
+        //    mCenterY = getTopLimitY();
+        //}
+        //
+        //if (mCenterY > getLowerLimitY()) {
+        //    mCenterY = getLowerLimitY();
+        //}
     }
 
     /**
@@ -430,6 +455,9 @@ public class YouZanQrcodeView extends RelativeLayout {
 
         canvas.drawPoint(mCenterX, mCenterY, centerPointPaint);//方点
         //canvas.drawCircle(mCenterX, mCenterY, 15, centerPointPaint);//圆点
+
+        canvas.drawLine(0, getLowerLimitY(), mViewWidth, getLowerLimitY(), centerPointPaint);
+        canvas.drawLine(0, getTopLimitY(), mViewWidth, getTopLimitY(), centerPointPaint);
     }
 
     private void drawLine(Canvas canvas, Paint paint, Path path, Line firstLine, Line secondLine) {
