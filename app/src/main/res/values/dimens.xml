@@ -1,0 +1,121 @@
+<resources>
+	<!-- Default screen margins, per the Android Design guidelines. -->
+	<dimen name="activity_horizontal_margin">16dp</dimen>
+	<dimen name="activity_vertical_margin">16dp</dimen>
+
+	<dimen name="title_bar_height">50dp</dimen>
+	<dimen name="mine_margin_top">15dp</dimen>
+	<dimen name="mine_item_height">66dp</dimen>
+	<dimen name="mine_shop_name_tv_size">20sp</dimen>
+	<dimen name="mine_shop_authentication_tv_size">16sp</dimen>
+
+
+	<dimen name="search_height">38dp</dimen>
+	<dimen name="search_close_padding">12dp</dimen>
+	<dimen name="select_pay_type_tv_size">8sp</dimen>
+	<dimen name="select_pay_type_margin_left_right">1dp</dimen>
+	<dimen name="select_pay_type_margin_top_bottom">4dp</dimen>
+	<dimen name="select_pay_type_horizontalSpacing">20dp</dimen>
+	<dimen name="select_pay_type_item_bg_padding_left_right">6dp</dimen>
+	<dimen name="select_pay_type_item_bg_padding_top_bottom">4dp</dimen>
+	<dimen name="select_pay_type_grid_view_height">120dp</dimen>
+	<dimen name="select_pay_item_title_height">50dp</dimen>
+	<dimen name="select_item_with">100dp</dimen>
+	<dimen name="select_item_tv_size">12sp</dimen>
+	<dimen name="select_item_padding_left_right">6dp</dimen>
+	<dimen name="select_item_padding_top_bottom">4dp</dimen>
+	<dimen name="select_reset_select_button_tv_size">16sp</dimen>
+	<dimen name="select_reset_select_button_padding_top_bottom">2dp</dimen>
+	<dimen name="select_cashier_margin_top">8dp</dimen>
+
+	<dimen name="key_board_height">240dp</dimen>
+	<dimen name="collect_money_collect_tips_height">40dp</dimen>
+	<dimen name="collect_money_calculate_result_margin_bottom">46dp</dimen>
+	<dimen name="collect_current_calculate_margin_bottom">16dp</dimen>
+	<dimen name="pay_popup_window_height">160dp</dimen>
+
+
+	<dimen name="capture_member_phone_margin_left_right">10dp</dimen>
+	<dimen name="capture_member_phone_margin_height">40dp</dimen>
+	<dimen name="capture_member_query_member_with">100dp</dimen>
+	<dimen name="capture_pay_money_tips_margin_top">10dp</dimen>
+	<dimen name="capture_pay_pay_money_margin_top">10dp</dimen>
+	<dimen name="capture_sq_width">250dp</dimen>
+	<dimen name="capture_sq_top_offset">30dp</dimen>
+	<dimen name="capture_sq_corner_Length">20dp</dimen>
+	<dimen name="capture_sq_corner_size">3dp</dimen>
+	<dimen name="capture_pay_logo_margin_bottom">2dp</dimen>
+	<dimen name="capture_scan_tips_margin_bottom">2dp</dimen>
+
+
+	<dimen name="add_cashier_tv_size">16sp</dimen>
+
+	<dimen name="collect_money_store_income_tv_size">20sp</dimen>
+
+	<dimen name="store_income_header_height">200dp</dimen>
+	<dimen name="store_income_withdraw_tips_margin_bottom">66dp</dimen>
+
+
+	<dimen name="add_cashier_btn_height">40dp</dimen>
+	<dimen name="add_cashier_btn_margin_left_right">30dp</dimen>
+	<dimen name="add_cashier_btn_margin_top">28dp</dimen>
+
+	<dimen name="pay_bill_detail_deal_money_margin_top">34dp</dimen>
+	<dimen name="pay_bill_detail_below_deal_money_height">150dp</dimen>
+	<dimen name="pay_bill_detail_bottom_view_height">64dp</dimen>
+
+
+	<dimen name="login_logo_margin_top">70dp</dimen>
+	<dimen name="login_input_phone_margin_top">50dp</dimen>
+
+	<dimen name="forget_password_btn_margin_left_right">30dp</dimen>
+
+	<integer name="income_bar_width">6</integer>
+
+
+
+	<dimen name="authorization_btn_height">40dp</dimen>
+	<dimen name="authorization_close_height_width">20dp</dimen>
+
+	<dimen name="refund_deal_money_height">154dp</dimen>
+	<dimen name="refund_deal_money_tips_margintop">40dp</dimen>
+
+	<dimen name="single_goods_single_price_margin_right">40dp</dimen>
+
+	<dimen name="capture_iv_show_scan_sqcode_margin_bottom">10dp</dimen>
+	<dimen name="capture_show_scan_sqcode_height_width">30dp</dimen>
+	<dimen name="capture_show_scan_view_margin_top">10dp</dimen>
+	<dimen name="capture_sq_pay_money_tips_margintop">0dp</dimen>
+	<dimen name="capture_sq_code_margintop">0dp</dimen>
+	<dimen name="capture_pay_type_logo_margin_top">0dp</dimen>
+
+	<dimen name="normal_btn_height">40dp</dimen>
+	<dimen name="normal_btn_margin_left_right">40dp</dimen>
+
+	<dimen name="edit_input_layout_tv_size">16sp</dimen>
+	<dimen name="edit_input_layout_input_tv_size">16sp</dimen>
+
+<!--大的pos机 ,小的pos机（新）-->
+
+	<dimen name="sp_18">18sp</dimen>
+	<dimen name="sp_25">25sp</dimen>
+	<dimen name="sp_40">40sp</dimen>
+
+	<dimen name="dp_0.5">0.5dp</dimen>
+	<dimen name="dp_3">3dp</dimen>
+
+	<dimen name="px_16">12sp</dimen>
+	<dimen name="px_18">13sp</dimen>
+	<dimen name="px_20">14sp</dimen>
+	<dimen name="px_24">16sp</dimen>
+	<dimen name="px_26">17sp</dimen>
+	<dimen name="px_28">18sp</dimen>
+	<dimen name="px_30">20sp</dimen>
+	<dimen name="px_36">26sp</dimen>
+	<dimen name="px_48">30sp</dimen>
+
+	<!-- 扫描桌号字体大小 -->
+	<dimen name="qrcode_table">10sp</dimen>
+
+
+</resources>

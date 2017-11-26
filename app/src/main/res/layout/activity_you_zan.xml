@@ -14,31 +14,171 @@
         android:layout_height="match_parent"
     >
 
-        <TextView
-            android:id="@+id/text1"
+        <RelativeLayout
+            android:id="@+id/rl_pay_scan_rqcode"
             android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:gravity="center"
-            android:text="我是钉子户1"
-            android:textSize="40sp"/>
+            android:visibility="gone"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/iv_show_scan_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/capture_show_scan_view_margin_top"
+                android:src="@drawable/iv_show_scan_view"/>
 
-        <TextView
-            android:id="@+id/text2"
+            <TextView
+                android:id="@+id/tv_sq_pay_money_tips"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/iv_show_scan_view"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/capture_sq_pay_money_tips_margintop"
+                android:text="应收金额"/>
+
+            <TextView
+                android:id="@+id/tv_sq_pay_money"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_sq_pay_money_tips"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="6dp"
+                android:text="￥0.00"
+                android:textColor="@color/color_333"
+                android:textSize="@dimen/px_48"/>
+            <ImageView
+                android:id="@+id/iv_sq_code"
+                android:layout_width="298dp"
+                android:layout_height="304dp"
+                android:layout_below="@id/tv_sq_pay_money"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/capture_sq_code_margintop"
+                android:scaleType="fitXY"/>
+            <LinearLayout
+                android:id="@+id/ll_pay_type_logo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/iv_sq_code"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/capture_pay_type_logo_margin_top"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/iv_scan_wechat"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:src="@drawable/iv_scan_alipay"/>
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ll_pay_type_logo"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:text="让顾客扫一扫收款码，向我付款"
+                android:textColor="@color/color_888"
+                android:textSize="@dimen/px_20"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/activity_scan_capture"
             android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:text="我是钉子户2"
-            android:textSize="40sp"/>
+            android:layout_height="match_parent">
+
+
+            <TextView
+                android:id="@+id/tv_pay_money_tips"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/capture_pay_money_tips_margin_top"
+                android:text="应收金额"
+                android:textColor="@color/white"
+                android:textSize="@dimen/px_30"/>
+
+            <TextView
+                android:id="@+id/tv_pay_money"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_pay_money_tips"
+                android:layout_centerHorizontal="true"
+                android:text="￥0.00"
+                android:textColor="@color/white"
+                android:textSize="@dimen/px_48"/>
+
+            <ImageView
+                android:id="@+id/iv_show_scan_sqcode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="5dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/iv_scan_sq_code"/>
+
+            <ImageView
+                android:id="@+id/iv_show_generate_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/iv_show_scan_sqcode"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/iv_show_generate_view"/>
+
+            <TextView
+                android:id="@+id/tv_scan_tips"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/iv_show_generate_view"
+                android:layout_centerHorizontal="true"
+                android:text="请顾客出示付款码 将顾客付款码放入扫描框内"
+                android:textColor="@color/color_666"
+                android:textSize="@dimen/px_20"/>
+
+            <TextView
+                android:id="@+id/tv_scan_table_tips"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="120dp"
+                android:text="将二维码/条码放入框内，即可自动扫描"
+                android:textColor="@color/color_eee"
+                android:textSize="@dimen/px_20"
+                android:visibility="gone"
+                tools:visibility="visible"/>
+
+            <LinearLayout
+                android:id="@+id/ll_pay_logo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/tv_scan_tips"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/capture_pay_logo_margin_bottom"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/iv_scan_wechat2"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:src="@drawable/iv_scan_alipay2"/>
+            </LinearLayout>
+        </RelativeLayout>
+
 
     </com.bing.lan.alipayview.YouZanQrcodeView>
 
 
     <com.bing.lan.alipayview.AutoScannerView
-        android:visibility="gone"
         android:id="@+id/autoView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
 
 
 </RelativeLayout>

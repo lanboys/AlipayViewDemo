@@ -1,14 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
 
-
-
-
     <color name="orange_salmon">#EC5745</color>
     <color name="holo_blue_light">#ff33b5e5</color>
+
+
+    <color name="transparent_20">#33000000</color>
+
+    <color name="color_434A5A">#434A5A</color>
+    <color name="color_EE9700">#EE9700</color>
+    <color name="color_999">#999999</color>
+    <color name="color_fff">#FFFFFF</color>
+    <color name="color_545966">#545966</color>
+    <color name="color_333">#333333</color>
+    <color name="color_eee">#EEEEEE</color>
+    <color name="color_666">#666666</color>
+    <color name="color_888">#888888</color>
+    <color name="color_ffa401">#FFA401</color>
+    <color name="color_ccc">#CCC</color>
+    <color name="color_ff795e">#FF795E</color>
+    <color name="color_ee9900">#EE9900</color>
+    <color name="color_ffdb4e">#FFDB4E</color>
+    <color name="color_f5b040">#F5B040</color>
+
+
+    <color name="white">#ffffffff</color>
+    <color name="gather_view_pressed">#ffffeccc</color>
+    <color name="btn_positive_normal">@color/theme_positive</color>
+    <color name="btn_positive_pressed">#ffee8800</color>
+    <color name="theme_positive">#ee9900</color>
+    <color name="color_ffdd66">#FFDD66</color>
+    <color name="color_b3d466">#B3D466</color>
+    <color name="color_f99b15">#F99B15</color>
+    <color name="color_fcc601">#FCC601</color>
+    <color name="color_ffd200">#FFD200</color>
+
+    <color name="red_normal">#FF0000</color>
+    <color name="red_pressed">#FF6666</color>
+
+    <color name="black">#000000</color>
+    <color name="black_alph02">#33000000</color>
+    <color name="black_alph04">#66000000</color>
+    <color name="black_alph30">#4d000000</color>
+    <color name="black_alph50">#80000000</color>
+    <color name="black_alph60">#7f000000</color>
+    <color name="black_alph70">#b3000000</color>
+    <color name="black_alph80">#cc000000</color>
+
+    <color name="gray_line">#CCCCCC</color>
+
+    <color name="press_color">#DDDDDD</color>
+
+    <color name="color_ff8989">#FF8989</color>
+
+    <color name="color_fbeccb">#FBECCB</color>
+    <color name="color_a6a19f">#A6A19F</color>
+    <color name="color_80c269">#80C269</color>
+
+    <color name="contents_text">#ff000000</color>
+    <color name="encode_view">#ffffffff</color>
+    <color name="possible_result_points">#c0ffbd21</color> <!-- Android standard ICS color -->
+    <color name="result_minor_text">#ffc0c0c0</color>
+    <color name="result_points">#c099cc00</color> <!-- Android standard ICS color -->
+    <color name="result_text">#ffffffff</color>
+    <color name="result_view">#b0000000</color>
+    <color name="status_text">#ffffffff</color>
+    <color name="transparent">#00000000</color>
+    <color name="viewfinder_laser">#ffcc0000</color> <!-- Android standard ICS color -->
+    <color name="viewfinder_mask">#60000000</color>
+
 
 </resources>

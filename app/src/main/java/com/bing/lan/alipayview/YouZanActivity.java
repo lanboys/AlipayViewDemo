@@ -3,7 +3,7 @@ package com.bing.lan.alipayview;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 public class YouZanActivity extends AppCompatActivity {
@@ -11,8 +11,8 @@ public class YouZanActivity extends AppCompatActivity {
     protected final LogUtil log = LogUtil.getLogUtil(getClass(), LogUtil.LOG_VERBOSE);
 
     YouZanQrcodeView youZan;
-    TextView text1;
-    TextView text2;
+    RelativeLayout text1;
+    RelativeLayout text2;
     float length = 600;
 
     AutoScannerView mAutoScannerView;
@@ -23,8 +23,8 @@ public class YouZanActivity extends AppCompatActivity {
         setContentView(R.layout.activity_you_zan);
 
         youZan = (YouZanQrcodeView) findViewById(R.id.youZan);
-        text1 = (TextView) findViewById(R.id.text1);
-        text2 = (TextView) findViewById(R.id.text2);
+        text1 = (RelativeLayout) findViewById(R.id.rl_pay_scan_rqcode);
+        text2 = (RelativeLayout) findViewById(R.id.activity_scan_capture);
 
         mAutoScannerView = (AutoScannerView) findViewById(R.id.autoView);
 
