@@ -3,6 +3,7 @@ package com.bing.lan.alipayview;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -11,8 +12,8 @@ public class YouZanActivity extends AppCompatActivity {
     protected final LogUtil log = LogUtil.getLogUtil(getClass(), LogUtil.LOG_VERBOSE);
 
     YouZanQrcodeView youZan;
-    RelativeLayout text1;
-    RelativeLayout text2;
+    RelativeLayout rl_pay_scan_rqcode;
+    LinearLayout activity_scan_capture;
     float length = 600;
 
     AutoScannerView mAutoScannerView;
@@ -23,15 +24,15 @@ public class YouZanActivity extends AppCompatActivity {
         setContentView(R.layout.activity_you_zan);
 
         youZan = (YouZanQrcodeView) findViewById(R.id.youZan);
-        text1 = (RelativeLayout) findViewById(R.id.rl_pay_scan_rqcode);
-        text2 = (RelativeLayout) findViewById(R.id.activity_scan_capture);
+        rl_pay_scan_rqcode = (RelativeLayout) findViewById(R.id.rl_pay_scan_rqcode);
+        activity_scan_capture = (LinearLayout) findViewById(R.id.activity_scan_capture);
 
         mAutoScannerView = (AutoScannerView) findViewById(R.id.autoView);
 
         mAutoScannerView.setCameraManager(new CameraManager());
 
-        text1.setTranslationY(length);
-        text2.setTranslationY(length);
+        rl_pay_scan_rqcode.setTranslationY(length);
+        activity_scan_capture.setTranslationY(length);
 
         youZan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,12 +59,12 @@ public class YouZanActivity extends AppCompatActivity {
                 log.i("onRectCenterScroll() centerY: " + centerY);
                 log.i("onRectCenterScroll() centerYRatio: " + centerYRatio);
 
-                //text1.setX();
-                text1.setTranslationY(centerYRatio * length);
+                //rl_pay_scan_rqcode.setX();
+                rl_pay_scan_rqcode.setTranslationY(centerYRatio * length);
 
-                text2.setScaleX(1 - centerYRatio + 0.2f);
-                text2.setScaleY(1 - centerYRatio + 0.2f);
-                text2.setTranslationY(centerYRatio * length);
+                activity_scan_capture.setScaleX(1 - centerYRatio + 0.2f);
+                activity_scan_capture.setScaleY(1 - centerYRatio + 0.2f);
+                activity_scan_capture.setTranslationY(centerYRatio * length);
             }
         });
     }
