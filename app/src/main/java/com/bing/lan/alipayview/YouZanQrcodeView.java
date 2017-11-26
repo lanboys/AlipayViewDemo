@@ -3,13 +3,14 @@ package com.bing.lan.alipayview;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.drawable.BitmapDrawable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -22,13 +23,17 @@ import android.widget.RelativeLayout;
  * <p>
  * https://github.com/lanboys/AndroidStudy
  * http://blog.csdn.net/wingichoy/article/details/50500479
+ * <p>
+ * http://blog.csdn.net/m075097/article/details/78533141
+ * http://blog.csdn.net/zhh_csdn_ard/article/details/54943766
+ * http://blog.csdn.net/hupei/article/details/51859171
  */
 
 public class YouZanQrcodeView extends RelativeLayout {
 
     protected final LogUtil log = LogUtil.getLogUtil(getClass(), LogUtil.LOG_VERBOSE);
     private final int triangleColor = Color.parseColor("#f39800");                        //边角的颜色
-    private final int triangleLength = dp2px(20);                                         //每个角的点距离
+    private final int triangleLength = dp2px(15);                                         //每个角的点距离
     private final int triangleWidth = dp2px(2);                                           //每个角的点宽度
     private final int centerPointRadius = dp2px(8);                                           //每个角的点宽度
     private final int backgroundColor = Color.parseColor("#60000000");                          //蒙在摄像头上面区域的半透明颜色
@@ -69,6 +74,9 @@ public class YouZanQrcodeView extends RelativeLayout {
     private OnRectCenterScrollListener mOnRectCenterScrollListener;
     private boolean isActionMoveQrcode = false;
     private int lineOffsetCount = 0;
+    private Bitmap mScannerLaserBitmap;
+    private ScannerLaserStyle mScannerLaserStyle = ScannerLaserStyle.RES_GRID;
+    private RectF mTriangleRectF;
 
     public YouZanQrcodeView(Context context) {
         super(context);
@@ -388,7 +396,8 @@ public class YouZanQrcodeView extends RelativeLayout {
         mCenterY = mViewCenterY;
 
         // 重置矩形
-        mRectF.set(mCenterX - currentLengthX, mCenterY - currentLengthY, mCenterX + currentLengthX, mCenterY + currentLengthY);
+        mRectF.set(mCenterX - currentLengthX, mCenterY - currentLengthY,
+                mCenterX + currentLengthX, mCenterY + currentLengthY);
     }
 
     /**
@@ -403,10 +412,26 @@ public class YouZanQrcodeView extends RelativeLayout {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         log.i("onDraw(): 绘制");
-        drawCenterRect(canvas);
+
+        //绘制背景
+        drawBackground(canvas, mRectF);
+        // 绘制四个角落线
+        drawTriangleLine(canvas, mRectF);
+        //辅助线 中心点 中心线
+        drawIndicatorLine(canvas);
+        //循环划线，从上到下
+        drawScannerLaser(canvas, mRectF);
     }
 
-    private void drawCenterRect(Canvas canvas) {
+    private void drawIndicatorLine(Canvas canvas) {
+        canvas.drawPoint(mCenterX, mCenterY, centerPointPaint);//方点
+        //canvas.drawCircle(mCenterX, mCenterY, 15, centerPointPaint);//圆点
+
+        canvas.drawLine(0, getLowerLimitY(), mViewWidth, getLowerLimitY(), centerPointPaint);
+        canvas.drawLine(0, getTopLimitY(), mViewWidth, getTopLimitY(), centerPointPaint);
+    }
+
+    private void drawBackground(Canvas canvas, RectF rectF) {
         int width = canvas.getWidth();
         int height = canvas.getHeight();
 
@@ -414,75 +439,116 @@ public class YouZanQrcodeView extends RelativeLayout {
         //log.i("drawCenterRect(): height: " + height);
 
         // 除了中间的识别区域，其他区域都将蒙上一层半透明的图层
-        canvas.drawRect(0, 0, width, mRectF.top, mBackgroundPaint);// 上面
-        canvas.drawRect(0, mRectF.top, mRectF.left, mRectF.bottom + 1, mBackgroundPaint);// 左边
-        canvas.drawRect(mRectF.right + 1, mRectF.top, width, mRectF.bottom + 1, mBackgroundPaint); // 右边
-        canvas.drawRect(0, mRectF.bottom + 1, width, height, mBackgroundPaint);// 下面
+        canvas.drawRect(0, 0, width, rectF.top, mBackgroundPaint);// 上面
+        canvas.drawRect(0, rectF.top, rectF.left, rectF.bottom + 1, mBackgroundPaint);// 左边
+        canvas.drawRect(rectF.right + 1, rectF.top, width, rectF.bottom + 1, mBackgroundPaint); // 右边
+        canvas.drawRect(0, rectF.bottom + 1, width, height, mBackgroundPaint);// 下面
 
         //功能类似上面 但是有区别
         //canvas.drawRect(0, 0, width, height, mBackgroundPaint);
-        //canvas.drawRect(mRectF.left, mRectF.top, mRectF.right, mRectF.bottom, mQrcodePaint);
+        //canvas.drawRect(rectF.left, rectF.top, rectF.right, rectF.bottom, mQrcodePaint);
+    }
+
+    private void drawTriangleLine(Canvas canvas, RectF rectF) {
+
+        if (mTriangleRectF == null) {
+            mTriangleRectF = new RectF();
+        }
+        mTriangleRectF.set(rectF.left - triangleWidth, rectF.top - triangleWidth,
+                rectF.right + triangleWidth, rectF.bottom + triangleWidth);
 
         // 四个角落的三角
-        //firstLine.startPoint.x = mRectF.left + triangleLength;
-        //firstLine.startPoint.y = mRectF.top + triangleWidth / 2;
+        //firstLine.startPoint.x = mTriangleRectF.left + triangleLength;
+        //firstLine.startPoint.y = mTriangleRectF.top + triangleWidth / 2;
         //
-        //firstLine.endPoint.x = mRectF.left + triangleWidth / 2;
-        //firstLine.endPoint.y = mRectF.top + triangleWidth / 2;
+        //firstLine.endPoint.x = mTriangleRectF.left + triangleWidth / 2;
+        //firstLine.endPoint.y = mTriangleRectF.top + triangleWidth / 2;
         //
-        //secondLine.endPoint.x = mRectF.left + triangleWidth / 2;
-        //secondLine.endPoint.y = mRectF.top + triangleLength;
+        //secondLine.endPoint.x = mTriangleRectF.left + triangleWidth / 2;
+        //secondLine.endPoint.y = mTriangleRectF.top + triangleLength;
         //
         //drawLine(canvas, trianglePaint, mTrianglePath, firstLine, secondLine);
+
+        // 点坐标 都是线中心坐标，根据triangleWidth向两边扩
+        //左上角
         mTrianglePath.reset();
-        mTrianglePath.moveTo(mRectF.left + triangleLength, mRectF.top + triangleWidth / 2);
-        mTrianglePath.lineTo(mRectF.left + triangleWidth / 2, mRectF.top + triangleWidth / 2);
-        mTrianglePath.lineTo(mRectF.left + triangleWidth / 2, mRectF.top + triangleLength);
+        mTrianglePath.moveTo(mTriangleRectF.left + triangleLength, mTriangleRectF.top + triangleWidth / 2);
+        mTrianglePath.lineTo(mTriangleRectF.left + triangleWidth / 2, mTriangleRectF.top + triangleWidth / 2);
+        mTrianglePath.lineTo(mTriangleRectF.left + triangleWidth / 2, mTriangleRectF.top + triangleLength);
         canvas.drawPath(mTrianglePath, trianglePaint);
 
-        mTrianglePath.moveTo(mRectF.right - triangleLength, mRectF.top + triangleWidth / 2);
-        mTrianglePath.lineTo(mRectF.right - triangleWidth / 2, mRectF.top + triangleWidth / 2);
-        mTrianglePath.lineTo(mRectF.right - triangleWidth / 2, mRectF.top + triangleLength);
+        //右上角
+        mTrianglePath.moveTo(mTriangleRectF.right - triangleLength, mTriangleRectF.top + triangleWidth / 2);
+        mTrianglePath.lineTo(mTriangleRectF.right - triangleWidth / 2, mTriangleRectF.top + triangleWidth / 2);
+        mTrianglePath.lineTo(mTriangleRectF.right - triangleWidth / 2, mTriangleRectF.top + triangleLength);
         canvas.drawPath(mTrianglePath, trianglePaint);
 
-        mTrianglePath.moveTo(mRectF.left + triangleWidth / 2, mRectF.bottom - triangleLength);
-        mTrianglePath.lineTo(mRectF.left + triangleWidth / 2, mRectF.bottom - triangleWidth / 2);
-        mTrianglePath.lineTo(mRectF.left + triangleLength, mRectF.bottom - triangleWidth / 2);
+        //左下角
+        mTrianglePath.moveTo(mTriangleRectF.left + triangleWidth / 2, mTriangleRectF.bottom - triangleLength);
+        mTrianglePath.lineTo(mTriangleRectF.left + triangleWidth / 2, mTriangleRectF.bottom - triangleWidth / 2);
+        mTrianglePath.lineTo(mTriangleRectF.left + triangleLength, mTriangleRectF.bottom - triangleWidth / 2);
         canvas.drawPath(mTrianglePath, trianglePaint);
 
-        mTrianglePath.moveTo(mRectF.right - triangleLength, mRectF.bottom - triangleWidth / 2);
-        mTrianglePath.lineTo(mRectF.right - triangleWidth / 2, mRectF.bottom - triangleWidth / 2);
-        mTrianglePath.lineTo(mRectF.right - triangleWidth / 2, mRectF.bottom - triangleLength);
+        //右下角
+        mTrianglePath.moveTo(mTriangleRectF.right - triangleLength, mTriangleRectF.bottom - triangleWidth / 2);
+        mTrianglePath.lineTo(mTriangleRectF.right - triangleWidth / 2, mTriangleRectF.bottom - triangleWidth / 2);
+        mTrianglePath.lineTo(mTriangleRectF.right - triangleWidth / 2, mTriangleRectF.bottom - triangleLength);
         canvas.drawPath(mTrianglePath, trianglePaint);
+    }
 
-        canvas.drawPoint(mCenterX, mCenterY, centerPointPaint);//方点
-        //canvas.drawCircle(mCenterX, mCenterY, 15, centerPointPaint);//圆点
-
-        canvas.drawLine(0, getLowerLimitY(), mViewWidth, getLowerLimitY(), centerPointPaint);
-        canvas.drawLine(0, getTopLimitY(), mViewWidth, getTopLimitY(), centerPointPaint);
-
-        RectF frame = mRectF;
+    private void drawScannerLaser(Canvas canvas, RectF frame) {
+        //https://github.com/mylhyl/Android-Zxing   ViewfinderView   227行
+        //http://blog.csdn.net/m075097/article/details/78533141   博客有有关绘制渐变的东东
 
         //循环划线，从上到下
-        if (lineOffsetCount > frame.bottom - frame.top - dp2px(10)) {
-            lineOffsetCount = 0;
+        if (lineOffsetCount > frame.bottom - frame.top) {
+            lineOffsetCount = dp2px(16);
         } else {
-            lineOffsetCount = lineOffsetCount + 6;
-            //            canvas.drawLine(frame.left, frame.top + lineOffsetCount, frame.right, frame.top + lineOffsetCount, linePaint);    //画一条红色的线
+            lineOffsetCount = lineOffsetCount + dp2px(2);
             RectF lineRect = new RectF();
             lineRect.left = frame.left;
-            lineRect.top = frame.top + lineOffsetCount;
             lineRect.right = frame.right;
-            lineRect.bottom = lineRect.top + dp2px(10);
+            lineRect.bottom = frame.top + lineOffsetCount;
 
-            //mBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_guide1).copy(Bitmap.Config.ARGB_8888, true);
-            BitmapDrawable drawable = (BitmapDrawable) (getResources().getDrawable(R.drawable.scanline_yellow));
-            Bitmap bitmap = drawable.getBitmap();
+            // 画绘制线
+            if (mScannerLaserStyle == ScannerLaserStyle.COLOR_LINE) {
+                lineRect.top = lineRect.bottom - dp2px(1);
+                canvas.drawRect(lineRect.left + dp2px(5), lineRect.top,
+                        lineRect.right - dp2px(5), lineRect.bottom, linePaint);
+            } else {
+                if (mScannerLaserBitmap == null) {
+                    //mScannerLaserBitmap = BitmapFactory.decodeResource( getResources(),
+                    // R.drawable.zfb_grid_scan_line).copy(Bitmap.Config.ARGB_8888, true);
+                    mScannerLaserBitmap = BitmapFactory.decodeResource(getResources(),
+                            R.drawable.zfb_grid_scan_line1);//R.drawable.scanline_yellow
 
-            canvas.drawBitmap(bitmap, null, lineRect, linePaint);
+                    //BitmapDrawable drawable = (BitmapDrawable) (getResources().
+                    // getDrawable(R.drawable.zfb_grid_scan_line));
+                    //mScannerLaserBitmap = drawable.getBitmap();
+                }
+
+                if (mScannerLaserStyle == ScannerLaserStyle.RES_GRID) {
+                    // 画网格
+                    lineRect.top = frame.top;
+
+                    int bitmapHeight = mScannerLaserBitmap.getHeight();
+                    int bitmapWidth = mScannerLaserBitmap.getWidth();
+                    log.i("drawScannerLaser()  bitmapHeight:  " + bitmapHeight);
+                    log.i("drawScannerLaser()  bitmapWidth:  " + bitmapWidth);
+
+                    Rect srcRect = new Rect(0, (int) (bitmapHeight - lineRect.height()),
+                            bitmapWidth, bitmapHeight);
+                    canvas.drawBitmap(mScannerLaserBitmap, srcRect, lineRect, linePaint);
+                } else if (mScannerLaserStyle == ScannerLaserStyle.RES_LINE) {
+                    // 画图片线
+                    lineRect.top = lineRect.bottom - dp2px(10);
+                    canvas.drawBitmap(mScannerLaserBitmap, null, lineRect, linePaint);
+                }
+            }
         }
-        //postInvalidateDelayed(10L);//区别？？
-        postInvalidateDelayed(10L, (int) frame.left, (int) frame.top, (int) frame.right, (int) frame.bottom);
+        //postInvalidateDelayed(10L);
+        postInvalidateDelayed(10L, (int) frame.left, (int) frame.top,
+                (int) frame.right, (int) frame.bottom);
     }
 
     private void drawLine(Canvas canvas, Paint paint, Path path, Line firstLine, Line secondLine) {
@@ -501,6 +567,21 @@ public class YouZanQrcodeView extends RelativeLayout {
         mOnRectCenterScrollListener = onRectCenterScrollListener;
     }
 
+    public enum ScannerLaserStyle {
+        /**
+         * 颜色线值样式
+         */
+        COLOR_LINE
+        /**
+         * 资源文件线样式
+         */
+        , RES_LINE
+        /**
+         * 资源文件网格样式
+         */
+        , RES_GRID
+    }
+
     interface OnTopBottomClickListener {
 
         void onTopClick(YouZanQrcodeView view);
@@ -510,7 +591,8 @@ public class YouZanQrcodeView extends RelativeLayout {
 
     interface OnRectCenterScrollListener {
 
-        void onRectCenterScroll(YouZanQrcodeView view, float centerX, float centerY, float centerXRatio, float centerYRatio);
+        void onRectCenterScroll(YouZanQrcodeView view, float centerX, float centerY,
+                float centerXRatio, float centerYRatio);
     }
 
     class Line {
