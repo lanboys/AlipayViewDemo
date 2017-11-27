@@ -17,6 +17,8 @@ import android.view.MotionEvent;
 import android.view.animation.OvershootInterpolator;
 import android.widget.RelativeLayout;
 
+import java.util.Random;
+
 /**
  * Created by 520 on 2017/6/20.
  * <p>
@@ -58,6 +60,7 @@ public class YouZanQrcodeView extends RelativeLayout {
     private Paint mQrcodePaint;                                                              //背景色画笔
     private Paint trianglePaint;
     private Paint centerPointPaint;
+    private Paint laserPointPaint;
     private Paint textPaint;
     private Paint linePaint;
     private Line firstLine;// 第一条线
@@ -75,7 +78,7 @@ public class YouZanQrcodeView extends RelativeLayout {
     private boolean isActionMoveQrcode = false;
     private int lineOffsetCount = 0;
     private Bitmap mScannerLaserBitmap;
-    private ScannerLaserStyle mScannerLaserStyle = ScannerLaserStyle.RES_GRID;
+    private ScannerLaserStyle mScannerLaserStyle = ScannerLaserStyle.RES_LINE;
     private RectF mTriangleRectF;
 
     public YouZanQrcodeView(Context context) {
@@ -118,6 +121,12 @@ public class YouZanQrcodeView extends RelativeLayout {
         centerPointPaint.setColor(triangleColor);
         centerPointPaint.setStrokeWidth(centerPointRadius);
         centerPointPaint.setStyle(Paint.Style.STROKE);
+
+        //闪烁点画笔
+        laserPointPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        laserPointPaint.setColor(triangleColor);
+        laserPointPaint.setStrokeWidth(dp2px(2));
+        laserPointPaint.setStyle(Paint.Style.STROKE);
 
         // 四个角落的三角
         mTrianglePath = new Path();
@@ -418,9 +427,9 @@ public class YouZanQrcodeView extends RelativeLayout {
         // 绘制四个角落线
         drawTriangleLine(canvas, mRectF);
         //辅助线 中心点 中心线
-        drawIndicatorLine(canvas);
+        //drawIndicatorLine(canvas);
         //循环划线，从上到下
-        drawScannerLaser(canvas, mRectF);
+        //drawScannerLaser(canvas, mRectF);
     }
 
     private void drawIndicatorLine(Canvas canvas) {
@@ -515,6 +524,17 @@ public class YouZanQrcodeView extends RelativeLayout {
                 lineRect.top = lineRect.bottom - dp2px(1);
                 canvas.drawRect(lineRect.left + dp2px(5), lineRect.top,
                         lineRect.right - dp2px(5), lineRect.bottom, linePaint);
+
+                Random random = new Random();
+                for (int i = 0; i < 10; i++) {
+                    float x = random.nextFloat() * frame.width() + frame.left;
+                    float y = random.nextFloat() * frame.height() + frame.top;
+
+                    log.i("drawScannerLaser() x: " + x);
+                    log.i("drawScannerLaser() y: " + y);
+
+                    canvas.drawPoint(x, y, laserPointPaint);
+                }
             } else {
                 if (mScannerLaserBitmap == null) {
                     //mScannerLaserBitmap = BitmapFactory.decodeResource( getResources(),
