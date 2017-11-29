@@ -34,13 +34,13 @@ import java.util.Random;
 public class YouZanQrcodeView extends RelativeLayout {
 
     protected final LogUtil log = LogUtil.getLogUtil(getClass(), LogUtil.LOG_VERBOSE);
-    private final int triangleColor = Color.parseColor("#f39800");                        //边角的颜色
+    private final int triangleColor = Color.parseColor("#fff39800");                        //边角的颜色
     private final int triangleLength = dp2px(15);                                         //每个角的点距离
     private final int triangleWidth = dp2px(2);                                           //每个角的点宽度
     private final int centerPointRadius = dp2px(8);                                           //每个角的点宽度
-    private final int backgroundColor = Color.parseColor("#60000000");                          //蒙在摄像头上面区域的半透明颜色
+    private final int backgroundColor = Color.parseColor("#ff000000");                          //蒙在摄像头上面区域的半透明颜色
     private final int qrcodeColor = Color.parseColor("#ffffffff");                          //蒙在摄像头上面区域的半透明颜色
-    private final int lineColor = Color.parseColor("#f39800");                            //中间线的颜色
+    private final int lineColor = Color.parseColor("#fff39800");                            //中间线的颜色
     private final int textColor = Color.parseColor("#CCCCCC");                            //文字的颜色
     private final int textMarinTop = dp2px(30);                                           //文字距离识别框的距离
     private float startX, startY, inX, inY;
@@ -58,7 +58,7 @@ public class YouZanQrcodeView extends RelativeLayout {
     private float mViewHeight, mViewWidth;//View 的大小
     private Paint mBackgroundPaint;                                                              //背景色画笔
     private Paint mQrcodePaint;                                                              //背景色画笔
-    private Paint trianglePaint;
+    private Paint mTrianglePaint;
     private Paint centerPointPaint;
     private Paint laserPointPaint;
     private Paint textPaint;
@@ -78,7 +78,7 @@ public class YouZanQrcodeView extends RelativeLayout {
     private boolean isActionMoveQrcode = false;
     private int lineOffsetCount = 0;
     private Bitmap mScannerLaserBitmap;
-    private ScannerLaserStyle mScannerLaserStyle = ScannerLaserStyle.RES_LINE;
+    private ScannerLaserStyle mScannerLaserStyle = ScannerLaserStyle.COLOR_LINE;
     private RectF mTriangleRectF;
 
     public YouZanQrcodeView(Context context) {
@@ -131,10 +131,10 @@ public class YouZanQrcodeView extends RelativeLayout {
         // 四个角落的三角
         mTrianglePath = new Path();
 
-        trianglePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        trianglePaint.setColor(triangleColor);
-        trianglePaint.setStrokeWidth(triangleWidth);
-        trianglePaint.setStyle(Paint.Style.STROKE);
+        mTrianglePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mTrianglePaint.setColor(triangleColor);
+        mTrianglePaint.setStrokeWidth(triangleWidth);
+        mTrianglePaint.setStyle(Paint.Style.STROKE);
 
         linePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         linePaint.setColor(lineColor);
@@ -296,6 +296,23 @@ public class YouZanQrcodeView extends RelativeLayout {
         resetRectCenter();
         resetLength();
         resetRect();
+        resetPaint();
+    }
+
+    private void resetPaint() {
+        float centerYRatio = (mCenterY - getTopLimitY()) / (getLowerLimitY() - getTopLimitY());
+        int alpha = (int) (centerYRatio * 255);
+        log.i("resetPaint() alpha1: " + alpha);
+        if (alpha > 255) {
+            alpha = 255;
+        } else if (alpha < 0) {
+            alpha = 0;
+        }
+        log.i("resetPaint() alpha2: " + alpha);
+        mBackgroundPaint.setAlpha(alpha);
+        mTrianglePaint.setAlpha(alpha);
+        laserPointPaint.setAlpha(alpha);
+        linePaint.setAlpha(alpha);
     }
 
     private void resetRectCenter() {
@@ -319,30 +336,37 @@ public class YouZanQrcodeView extends RelativeLayout {
      * 重置长度
      */
     private void resetLength() {
+        // 算法1
+        //float centerYRatio = (mCenterY - getTopLimitY()) / (getLowerLimitY() - getTopLimitY());
+        //currentLengthX = centerYRatio * originLengthX;
+        //currentLengthY = centerYRatio * originLengthY;
+
+        // 算法2
         currentLengthX = (mCenterY / mViewCenterY) * originLengthX;
         currentLengthY = (mCenterY / mViewCenterY) * originLengthY;
+
         log.i("resetLength(): mViewCenterY: " + mViewCenterY);
         log.i("resetLength(): mCenterY: " + mCenterY);
         log.i("resetLength(): currentLengthX: " + currentLengthX);
         //log.i("resetLength(): currentLengthY: " + currentLengthY);
 
-        if (currentLengthX < 80) {
-            currentLengthX = 80;
+        if (currentLengthX < 30) {
+            currentLengthX = 30;
         } else if (currentLengthX > originLengthX) {
             currentLengthX = originLengthX;
         }
 
-        if (currentLengthY < 80) {
-            currentLengthY = 80;
+        if (currentLengthY < 30) {
+            currentLengthY = 30;
         } else if (currentLengthY > originLengthY) {
             currentLengthY = originLengthY;
         }
 
-        float v = currentLengthX / originLengthX * 100;
-        log.i("resetLength(): currentLength11111111111111111: " + v);
-        log.i("resetLength(): currentLength11111111111111111: " + (int) v);
-
-        mBackgroundPaint.setAlpha((int) v);
+        //float v = currentLengthX / originLengthX * 100;
+        //log.i("resetLength(): currentLength11111111111111111: " + v);
+        //log.i("resetLength(): currentLength11111111111111111: " + (int) v);
+        //
+        ////mBackgroundPaint.setAlpha((int) v);
     }
 
     private void resetRect() {
@@ -368,18 +392,16 @@ public class YouZanQrcodeView extends RelativeLayout {
         mRectF.set(left, top, right, bottom);
 
         if (mOnRectCenterScrollListener != null) {
-
             float centerYRatio = (mCenterY - getTopLimitY()) / (getLowerLimitY() - getTopLimitY());
             log.i("onRectCenterScroll() ----------------------");
             log.i("onRectCenterScroll() centerY: " + mCenterY);
             log.i("onRectCenterScroll() centerYRatio: " + centerYRatio);
-
             mOnRectCenterScrollListener.onRectCenterScroll(this, mCenterX, mCenterY, 0, centerYRatio);
         }
     }
 
     private float getTopLimitY() {
-        return mViewHeight * 0.2f;
+        return mViewHeight * 0.1f;
     }
 
     private float getLowerLimitY() {
@@ -429,7 +451,7 @@ public class YouZanQrcodeView extends RelativeLayout {
         //辅助线 中心点 中心线
         //drawIndicatorLine(canvas);
         //循环划线，从上到下
-        //drawScannerLaser(canvas, mRectF);
+        drawScannerLaser(canvas, mRectF);
     }
 
     private void drawIndicatorLine(Canvas canvas) {
@@ -476,7 +498,7 @@ public class YouZanQrcodeView extends RelativeLayout {
         //secondLine.endPoint.x = mTriangleRectF.left + triangleWidth / 2;
         //secondLine.endPoint.y = mTriangleRectF.top + triangleLength;
         //
-        //drawLine(canvas, trianglePaint, mTrianglePath, firstLine, secondLine);
+        //drawLine(canvas, mTrianglePaint, mTrianglePath, firstLine, secondLine);
 
         // 点坐标 都是线中心坐标，根据triangleWidth向两边扩
         //左上角
@@ -484,25 +506,25 @@ public class YouZanQrcodeView extends RelativeLayout {
         mTrianglePath.moveTo(mTriangleRectF.left + triangleLength, mTriangleRectF.top + triangleWidth / 2);
         mTrianglePath.lineTo(mTriangleRectF.left + triangleWidth / 2, mTriangleRectF.top + triangleWidth / 2);
         mTrianglePath.lineTo(mTriangleRectF.left + triangleWidth / 2, mTriangleRectF.top + triangleLength);
-        canvas.drawPath(mTrianglePath, trianglePaint);
+        canvas.drawPath(mTrianglePath, mTrianglePaint);
 
         //右上角
         mTrianglePath.moveTo(mTriangleRectF.right - triangleLength, mTriangleRectF.top + triangleWidth / 2);
         mTrianglePath.lineTo(mTriangleRectF.right - triangleWidth / 2, mTriangleRectF.top + triangleWidth / 2);
         mTrianglePath.lineTo(mTriangleRectF.right - triangleWidth / 2, mTriangleRectF.top + triangleLength);
-        canvas.drawPath(mTrianglePath, trianglePaint);
+        canvas.drawPath(mTrianglePath, mTrianglePaint);
 
         //左下角
         mTrianglePath.moveTo(mTriangleRectF.left + triangleWidth / 2, mTriangleRectF.bottom - triangleLength);
         mTrianglePath.lineTo(mTriangleRectF.left + triangleWidth / 2, mTriangleRectF.bottom - triangleWidth / 2);
         mTrianglePath.lineTo(mTriangleRectF.left + triangleLength, mTriangleRectF.bottom - triangleWidth / 2);
-        canvas.drawPath(mTrianglePath, trianglePaint);
+        canvas.drawPath(mTrianglePath, mTrianglePaint);
 
         //右下角
         mTrianglePath.moveTo(mTriangleRectF.right - triangleLength, mTriangleRectF.bottom - triangleWidth / 2);
         mTrianglePath.lineTo(mTriangleRectF.right - triangleWidth / 2, mTriangleRectF.bottom - triangleWidth / 2);
         mTrianglePath.lineTo(mTriangleRectF.right - triangleWidth / 2, mTriangleRectF.bottom - triangleLength);
-        canvas.drawPath(mTrianglePath, trianglePaint);
+        canvas.drawPath(mTrianglePath, mTrianglePaint);
     }
 
     private void drawScannerLaser(Canvas canvas, RectF frame) {
