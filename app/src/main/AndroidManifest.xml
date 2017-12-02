@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".alipay.AliPayActivity">
+        <activity android:name=".aliPay.AliPayActivity">
         </activity>
         <activity android:name=".youzan.YouZanActivity">
         </activity>
@@ -25,6 +25,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".loading.LoadingActivity">
+        </activity>
+        <activity android:name=".screenLock.ScreenLockActivity">
 
         </activity>
     </application>

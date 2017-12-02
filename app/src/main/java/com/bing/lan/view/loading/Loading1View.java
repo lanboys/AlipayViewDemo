@@ -86,6 +86,6 @@ public class Loading1View extends View {
             mStartAngle -= 360;
         }
         canvas.drawBitmap(mPointBitmap, 0, 0, null);
-        postInvalidateDelayed(250L);
+        postInvalidateDelayed(200L);
     }
 }

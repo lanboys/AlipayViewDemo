@@ -44,4 +44,13 @@
         android:padding="10dp"
         android:text="倒计时loading"/>
 
+    <Button
+        android:id="@+id/btn_screenLock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#05f9f9"
+        android:onClick="onScreenLock"
+        android:padding="10dp"
+        android:text="有利网屏幕锁"/>
+
 </LinearLayout>

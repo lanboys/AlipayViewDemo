@@ -1,4 +1,4 @@
-package com.bing.lan.view.alipay;
+package com.bing.lan.view.aliPay;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
