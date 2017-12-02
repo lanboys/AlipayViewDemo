@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.bing.lan.view.alipay.AliPayActivity;
 import com.bing.lan.view.label.LabelButtonActivity;
+import com.bing.lan.view.loading.LoadingActivity;
 import com.bing.lan.view.youzan.YouZanActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -44,5 +45,11 @@ public class MainActivity extends AppCompatActivity {
     public void onYouZan(View view) {
         Intent intent = new Intent(this, YouZanActivity.class);
         startActivity(intent);
+    }
+
+    public void onLoading1(View view) {
+        Intent intent = new Intent(this, LoadingActivity.class);
+        startActivity(intent);
+
     }
 }

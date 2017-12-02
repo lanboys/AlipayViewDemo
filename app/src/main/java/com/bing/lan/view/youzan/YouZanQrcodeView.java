@@ -583,11 +583,11 @@ public class YouZanQrcodeView extends RelativeLayout {
 
                     Rect srcRect = new Rect(0, (int) (bitmapHeight - lineRect.height()),
                             bitmapWidth, bitmapHeight);
-                    canvas.drawBitmap(mScannerLaserBitmap, srcRect, lineRect, linePaint);
+                    canvas.drawBitmap(mScannerLaserBitmap, srcRect, lineRect, null);
                 } else if (mScannerLaserStyle == ScannerLaserStyle.RES_LINE) {
                     // 画图片线
                     lineRect.top = lineRect.bottom - dp2px(10);
-                    canvas.drawBitmap(mScannerLaserBitmap, null, lineRect, linePaint);
+                    canvas.drawBitmap(mScannerLaserBitmap, null, lineRect, null);
                 }
             }
         }

@@ -35,4 +35,13 @@
         android:padding="10dp"
         android:text="有赞收款动画"/>
 
+    <Button
+        android:id="@+id/btn_loading1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#05f9f9"
+        android:onClick="onLoading1"
+        android:padding="10dp"
+        android:text="倒计时loading"/>
+
 </LinearLayout>
