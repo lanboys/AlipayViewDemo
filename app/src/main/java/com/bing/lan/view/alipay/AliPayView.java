@@ -1,4 +1,4 @@
-package com.bing.lan.alipayview;
+package com.bing.lan.view.alipay;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -9,14 +9,17 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 
-import static com.bing.lan.alipayview.AlipayView.State.FINISH;
-import static com.bing.lan.alipayview.AlipayView.State.IDLE;
+import com.bing.lan.view.utils.LogUtil;
+import com.bing.lan.view.R;
+
+import static com.bing.lan.view.alipay.AliPayView.State.FINISH;
+import static com.bing.lan.view.alipay.AliPayView.State.IDLE;
 
 /**
  * Created by MQ on 2017/1/20.
  */
 
-public class AlipayView extends View {
+public class AliPayView extends View {
 
     private Paint mPaint;
     private RectF mRectF;
@@ -45,15 +48,15 @@ public class AlipayView extends View {
 
     //private static final String TAG = "Alipay--->";
 
-    public AlipayView(Context context) {
+    public AliPayView(Context context) {
         this(context, null);
     }
 
-    public AlipayView(Context context, AttributeSet attrs) {
+    public AliPayView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public AlipayView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public AliPayView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }

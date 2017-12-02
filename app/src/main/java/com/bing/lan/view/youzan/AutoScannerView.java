@@ -1,4 +1,4 @@
-package com.bing.lan.alipayview;
+package com.bing.lan.view.youzan;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -9,6 +9,8 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.bing.lan.view.R;
 
 /**
  * Created by yangxixi on 16/11/22.

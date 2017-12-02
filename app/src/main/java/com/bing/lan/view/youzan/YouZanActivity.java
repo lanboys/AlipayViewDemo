@@ -1,4 +1,4 @@
-package com.bing.lan.alipayview;
+package com.bing.lan.view.youzan;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +7,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.bing.lan.view.utils.LogUtil;
+import com.bing.lan.view.R;
 
 public class YouZanActivity extends AppCompatActivity {
 

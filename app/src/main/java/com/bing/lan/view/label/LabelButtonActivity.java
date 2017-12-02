@@ -1,4 +1,4 @@
-package com.bing.lan.alipayview;
+package com.bing.lan.view.label;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.bing.lan.view.R;
 
 public class LabelButtonActivity extends AppCompatActivity implements View.OnClickListener {
 

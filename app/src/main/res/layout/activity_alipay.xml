@@ -4,8 +4,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-    <com.bing.lan.alipayview.AlipayView
-        android:id="@+id/alipay_view"
+    <com.bing.lan.view.alipay.AliPayView
+        android:id="@+id/aliPay_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"/>
@@ -34,15 +34,7 @@
             android:foregroundTintMode="add"
             android:padding="10dp"
             android:text="支付完成"/>
-        <Button
-            android:id="@+id/btn_new_activity"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
 
-            android:layout_weight="1"
-            android:backgroundTint="#05f9f9"
-            android:padding="10dp"
-            android:text="有赞动画"/>
     </LinearLayout>
 
 

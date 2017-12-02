@@ -5,10 +5,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.bing.lan.alipayview.YouZanActivity">
+    tools:context="com.bing.lan.view.youzan.YouZanActivity">
 
 
-    <com.bing.lan.alipayview.YouZanQrcodeView
+    <com.bing.lan.view.youzan.YouZanQrcodeView
         android:id="@+id/youZan"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -151,10 +151,10 @@
         </LinearLayout>
 
 
-    </com.bing.lan.alipayview.YouZanQrcodeView>
+    </com.bing.lan.view.youzan.YouZanQrcodeView>
 
 
-    <com.bing.lan.alipayview.AutoScannerView
+    <com.bing.lan.view.youzan.AutoScannerView
         android:id="@+id/autoView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

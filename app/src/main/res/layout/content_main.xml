@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.bing.lan.view.MainActivity"
+    tools:showIn="@layout/activity_main">
+
+
+    <Button
+        android:id="@+id/btn_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onLabel"
+        android:padding="10dp"
+        android:text="自定义按钮"/>
+    <Button
+        android:id="@+id/btn_aliPay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onAliPay"
+        android:padding="10dp"
+        android:text="阿里支付动画"/>
+    <Button
+        android:id="@+id/btn_youzan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#05f9f9"
+        android:onClick="onYouZan"
+        android:padding="10dp"
+        android:text="有赞收款动画"/>
+
+</LinearLayout>

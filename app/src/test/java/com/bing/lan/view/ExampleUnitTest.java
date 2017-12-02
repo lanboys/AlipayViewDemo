@@ -1,4 +1,4 @@
-package com.bing.lan.alipayview;
+package com.bing.lan.view;
 
 import org.junit.Test;
 

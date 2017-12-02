@@ -1,4 +1,4 @@
-package com.bing.lan.alipayview;
+package com.bing.lan.view.label;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
+
+import com.bing.lan.view.R;
 
 /**
  * Created by 520 on 2017/7/7.
@@ -16,7 +18,7 @@ public class LabelButton extends FrameLayout {
     View shade_view;
     View button;
 
-    private static final String TAG = "-->520";
+    private static final String TAG = "-->LabelButton";
 
     public LabelButton(@NonNull Context context) {
         super(context);

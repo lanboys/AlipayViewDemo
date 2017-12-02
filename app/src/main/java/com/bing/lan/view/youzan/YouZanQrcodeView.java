@@ -1,4 +1,4 @@
-package com.bing.lan.alipayview;
+package com.bing.lan.view.youzan;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -16,6 +16,9 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.animation.OvershootInterpolator;
 import android.widget.RelativeLayout;
+
+import com.bing.lan.view.utils.LogUtil;
+import com.bing.lan.view.R;
 
 import java.util.Random;
 
