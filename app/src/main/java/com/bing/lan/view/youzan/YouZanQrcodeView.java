@@ -216,6 +216,8 @@ public class YouZanQrcodeView extends RelativeLayout {
                     resetLocation();
                 }
                 break;
+            default:
+                break;
         }
         //log.i("onTouchEvent(): inX: " + inX);
         //log.i("onTouchEvent(): inY: " + inY);
