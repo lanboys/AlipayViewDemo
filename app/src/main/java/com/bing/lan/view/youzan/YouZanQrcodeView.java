@@ -262,6 +262,11 @@ public class YouZanQrcodeView extends RelativeLayout {
         //http://www.wolframalpha.com/input/?i=x%5E(2*3)(0%3Cx%3C%3D1)
         //http://blog.csdn.net/u011835956/article/details/51783025
 
+        //Android动画插值器之PathInterpolator浅析
+        //http://blog.csdn.net/u013279866/article/details/70142976
+        //valueAnimator.setInterpolator(new PathInterpolator());
+
+
         //valueAnimator.setInterpolator(new LinearInterpolator());
         //valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
         //valueAnimator.setInterpolator(new AnticipateInterpolator());

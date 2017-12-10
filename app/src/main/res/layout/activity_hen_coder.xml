@@ -9,6 +9,7 @@
 
     <com.bing.lan.view.henCoder.HenCoderView
         android:layout_width="match_parent"
+        android:foreground="#91565454"
         android:layout_height="match_parent"/>
 
 </LinearLayout>

@@ -8,8 +8,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bing.lan.view.utils.LogUtil;
 import com.bing.lan.view.R;
+import com.bing.lan.view.utils.LogUtil;
 
 public class YouZanActivity extends AppCompatActivity {
 
