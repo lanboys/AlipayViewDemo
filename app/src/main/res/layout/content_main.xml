@@ -53,4 +53,13 @@
         android:padding="10dp"
         android:text="有利网屏幕锁"/>
 
+    <Button
+        android:id="@+id/btn_scroll_head"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#05f9f9"
+        android:onClick="onScrollHead"
+        android:padding="10dp"
+        android:text="滑动头部"/>
+
 </LinearLayout>

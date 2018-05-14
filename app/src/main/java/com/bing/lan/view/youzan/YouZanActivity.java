@@ -101,12 +101,12 @@ public class YouZanActivity extends AppCompatActivity {
         youZan.setOnTopBottomClickListener(new YouZanQrcodeView.OnTopBottomClickListener() {
             @Override
             public void onTopClick(YouZanQrcodeView view) {
-                //Toast.makeText(YouZanActivity.this, "youZan被点击了上面", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(ScrollHeaderActivity.this, "youZan被点击了上面", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onBottomClick(YouZanQrcodeView view) {
-                //Toast.makeText(YouZanActivity.this, "youZan被点击了下面", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(ScrollHeaderActivity.this, "youZan被点击了下面", Toast.LENGTH_SHORT).show();
             }
         });
 

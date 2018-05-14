@@ -8,10 +8,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.bing.lan.view.aliPay.AliPayActivity;
+import com.bing.lan.view.alipay.AliPayActivity;
 import com.bing.lan.view.label.LabelButtonActivity;
 import com.bing.lan.view.loading.LoadingActivity;
 import com.bing.lan.view.screenLock.ScreenLockActivity;
+import com.bing.lan.view.scrollHeader.ScrollHeaderActivity;
 import com.bing.lan.view.youzan.YouZanActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -55,6 +56,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void onScreenLock(View view) {
         Intent intent = new Intent(this, ScreenLockActivity.class);
+        startActivity(intent);
+    }
+
+    public void onScrollHead(View view) {
+        Intent intent = new Intent(this, ScrollHeaderActivity.class);
         startActivity(intent);
     }
 }

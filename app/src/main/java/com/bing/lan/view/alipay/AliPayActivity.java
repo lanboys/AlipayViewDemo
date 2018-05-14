@@ -1,4 +1,4 @@
-package com.bing.lan.view.aliPay;
+package com.bing.lan.view.alipay;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,7 +10,7 @@ import com.bing.lan.view.R;
 
 public class AliPayActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private AliPayView mAliPayView;
+    private  AliPayView mAliPayView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -20,14 +20,14 @@ public class AliPayActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void initViews() {
-        mAliPayView = (AliPayView) findViewById(R.id.aliPay_view);
+        mAliPayView = ( AliPayView) findViewById(R.id.aliPay_view);
         Button btn_start_pay = (Button) findViewById(R.id.btn_start_pay);
         Button btn_end_pay = (Button) findViewById(R.id.btn_end_pay);
 
         btn_start_pay.setOnClickListener(this);
         btn_end_pay.setOnClickListener(this);
 
-        mAliPayView.setState(AliPayView.State.IDLE);
+        mAliPayView.setState( AliPayView.State.IDLE);
     }
 
     @Override
@@ -35,7 +35,7 @@ public class AliPayActivity extends AppCompatActivity implements View.OnClickLis
         switch (v.getId()) {
             case R.id.btn_start_pay:
                 mAliPayView.setOverPay(false);
-                mAliPayView.setState(AliPayView.State.PROGRESS);
+                mAliPayView.setState( AliPayView.State.PROGRESS);
                 break;
             case R.id.btn_end_pay:
                 mAliPayView.setOverPay(true);

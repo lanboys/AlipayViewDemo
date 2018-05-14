@@ -1,4 +1,4 @@
-package com.bing.lan.view.aliPay;
+package com.bing.lan.view.alipay;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -12,8 +12,8 @@ import android.view.View;
 import com.bing.lan.view.utils.LogUtil;
 import com.bing.lan.view.R;
 
-import static com.bing.lan.view.aliPay.AliPayView.State.FINISH;
-import static com.bing.lan.view.aliPay.AliPayView.State.IDLE;
+import static com.bing.lan.view.alipay.AliPayView.State.FINISH;
+import static com.bing.lan.view.alipay.AliPayView.State.IDLE;
 
 /**
  * Created by MQ on 2017/1/20.
