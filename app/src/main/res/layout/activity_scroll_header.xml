@@ -8,6 +8,7 @@
     tools:context="com.bing.lan.view.label.LabelButtonActivity">
 
     <com.bing.lan.view.scrollHeader.ScrollHeaderView
+        android:id="@+id/scroll_header"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -15,13 +16,14 @@
         <TextView
             android:id="@+id/header"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="114.3dp"
             android:text="HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH"
             android:onClick="onHeadClick"
             android:textSize="40dp"/>
 
 
         <android.support.v4.widget.NestedScrollView
+            android:id="@+id/nestedScrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <TextView

@@ -8,7 +8,6 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.LinearLayout;
@@ -41,6 +40,7 @@ public class ScrollHeaderView extends LinearLayout {
     private final int textColor = Color.parseColor("#CCCCCC");                            //文字的颜色
     private final int textMarinTop = dp2px(30);                                           //文字距离识别框的距离
     private float startX, startY, inX, inY;
+    private OnRectCenterScrollListener mOnRectCenterScrollListener;
 
     private Paint mPaint;
     private RectF mRectF;
@@ -77,7 +77,7 @@ public class ScrollHeaderView extends LinearLayout {
         super(context);
     }
 
-    public ScrollHeaderView(Context context, @Nullable AttributeSet attrs) {
+    public ScrollHeaderView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setWillNotDraw(false);
         initView();
@@ -145,27 +145,13 @@ public class ScrollHeaderView extends LinearLayout {
         return super.dispatchTouchEvent(event);
     }
 
-    int headerKeepHight = 300;
+    int headerKeepHeight = 300;
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
-        log.i("onInterceptTouchEvent() headerKeepHight: " + headerKeepHight);
-
-        //switch (event.getAction()) {
-        //    case MotionEvent.ACTION_DOWN:
-        //        break;
-        //    case MotionEvent.ACTION_MOVE:
-        //        if (headerKeepHight >= 200) {
-        //            return true;
-        //        }
-        //        break;
-        //    case MotionEvent.ACTION_UP:
-        //        break;
-        //    default:
-        //        break;
-        //}
-
         log.i("onInterceptTouchEvent(): ---------------------------");
+        log.i("onInterceptTouchEvent() headerKeepHeight: " + headerKeepHeight);
+
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 log.i("onInterceptTouchEvent()status:状态  按下");
@@ -204,15 +190,25 @@ public class ScrollHeaderView extends LinearLayout {
         //log.i("onInterceptTouchEvent(): startX: " + startX);
         log.i("onInterceptTouchEvent(): startY: " + startY);
 
-        headerKeepHight += inY;
-        log.i("onInterceptTouchEvent() headerKeepHight: " + headerKeepHight);
+        //headerKeepHeight += inY;
+        //log.i("onInterceptTouchEvent() headerKeepHeight: " + headerKeepHeight);
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 break;
             case MotionEvent.ACTION_MOVE:
-                if (headerKeepHight >= 200) {
-                    return true;
+                if (inY < 0) {
+                    // 向上滑动
+                    if (headerKeepHeight >= 200) {
+                        return true;
+                    }
+                } else if (inY > 0) {
+                    //向下滑动
+                    if (mOnRectCenterScrollListener != null) {
+                        if (mOnRectCenterScrollListener.isInterceptTouchEvent()) {
+                            return true;
+                        }
+                    }
                 }
                 break;
             case MotionEvent.ACTION_UP:
@@ -230,27 +226,27 @@ public class ScrollHeaderView extends LinearLayout {
             case MotionEvent.ACTION_DOWN:
                 log.i("onTouchEvent()status:状态  按下");
                 //
-                //startX = event.getX();
-                //startY = event.getY();
+                startX = event.getX();
+                startY = event.getY();
 
                 break;
 
             case MotionEvent.ACTION_MOVE:
                 log.i("onTouchEvent()status:状态 移动");
                 //
-                //inX = event.getX() - startX;
-                //inY = event.getY() - startY;
-                //
-                //startX = event.getX();
-                //startY = event.getY();
+                inX = event.getX() - startX;
+                inY = event.getY() - startY;
+
+                startX = event.getX();
+                startY = event.getY();
 
                 break;
             case MotionEvent.ACTION_UP:
                 log.i("onTouchEvent()status:状态 松手");
                 //
                 ////复原
-                //inY = 0;
-                //inX = 0;
+                inY = 0;
+                inX = 0;
 
                 break;
             default:
@@ -261,15 +257,42 @@ public class ScrollHeaderView extends LinearLayout {
 
         //log.i("onTouchEvent(): startX: " + startX);
         //log.i("onTouchEvent(): startY: " + startY);
-        boolean b = super.onTouchEvent(event);
-        log.i("onTouchEvent(): b: " + b);
-
-        return b;
-
-        //headerKeepHight += inY;
-        //log.i("onTouchEvent() headerKeepHight: " + headerKeepHight);
-
+        //boolean b = super.onTouchEvent(event);
+        //log.i("onTouchEvent(): b: " + b);
+        //
+        ////return b;
         //return true;
+
+        headerKeepHeight += inY;
+        log.i("onTouchEvent() headerKeepHeight: " + headerKeepHeight);
+
+        if (headerKeepHeight > 300) {
+            headerKeepHeight = 300;
+        }
+
+        if (headerKeepHeight < 200) {
+            headerKeepHeight = 200;
+        }
+
+        if (mOnRectCenterScrollListener != null) {
+            mOnRectCenterScrollListener.onRectCenterScroll(this, headerKeepHeight);
+        }
+        return true;
+    }
+
+    public OnRectCenterScrollListener getOnRectCenterScrollListener() {
+        return mOnRectCenterScrollListener;
+    }
+
+    public void setOnRectCenterScrollListener(OnRectCenterScrollListener onRectCenterScrollListener) {
+        mOnRectCenterScrollListener = onRectCenterScrollListener;
+    }
+
+    interface OnRectCenterScrollListener {
+
+        void onRectCenterScroll(ScrollHeaderView view, float headerKeepHight);
+
+        boolean isInterceptTouchEvent();
     }
 
     @Override

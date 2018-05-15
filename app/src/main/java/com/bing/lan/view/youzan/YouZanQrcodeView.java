@@ -11,14 +11,13 @@ import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.animation.OvershootInterpolator;
 import android.widget.RelativeLayout;
 
-import com.bing.lan.view.utils.LogUtil;
 import com.bing.lan.view.R;
+import com.bing.lan.view.utils.LogUtil;
 
 import java.util.Random;
 
@@ -88,7 +87,7 @@ public class YouZanQrcodeView extends RelativeLayout {
         super(context);
     }
 
-    public YouZanQrcodeView(Context context, @Nullable AttributeSet attrs) {
+    public YouZanQrcodeView(Context context,  AttributeSet attrs) {
         super(context, attrs);
         setWillNotDraw(false);
         initView();
