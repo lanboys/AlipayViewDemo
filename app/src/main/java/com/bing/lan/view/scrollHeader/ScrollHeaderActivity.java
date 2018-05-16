@@ -13,7 +13,8 @@ import android.widget.LinearLayout;
 import com.bing.lan.view.R;
 import com.bing.lan.view.utils.LogUtil;
 
-public class ScrollHeaderActivity extends AppCompatActivity implements ScrollHeaderView.OnRectCenterScrollListener {
+public class ScrollHeaderActivity extends AppCompatActivity implements
+        ScrollHeaderView.OnScrollChangeListener, ScrollHeaderView.OnInterceptTouchEventCallBack {
 
     protected final LogUtil log = LogUtil.getLogUtil(getClass(), LogUtil.LOG_VERBOSE);
     private ScrollHeaderView mScrollHeaderView;
@@ -33,7 +34,8 @@ public class ScrollHeaderActivity extends AppCompatActivity implements ScrollHea
         ll_container = (LinearLayout) findViewById(R.id.ll_container);
         nestedScrollView = (NestedScrollView) findViewById(R.id.nestedScrollView);
 
-        mScrollHeaderView.setOnRectCenterScrollListener(this);
+        mScrollHeaderView.setOnScrollChangeListener(this);
+        mScrollHeaderView.setInterceptTouchEventCallBack(this);
 
         mLayoutParams = mHeader.getLayoutParams();
 
@@ -58,7 +60,7 @@ public class ScrollHeaderActivity extends AppCompatActivity implements ScrollHea
     }
 
     @Override
-    public void onRectCenterScroll(ScrollHeaderView view, float headerKeepHight) {
+    public void onScrollChange(ScrollHeaderView view, float headerKeepHight) {
 
         mLayoutParams.height += (int) headerKeepHight;
 

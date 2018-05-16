@@ -13,66 +13,60 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-
-        <!--<RelativeLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="80dp">-->
-
-        <!--<TextView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="100dp"-->
-        <!--android:background="#df3ef4"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:translationY="0dp"-->
-        <!--android:text="111111111111111111122222222222222222"-->
-        <!--android:textSize="40dp"/>-->
-        <!--</RelativeLayout>-->
-
-
-        <FrameLayout
-            android:id="@+id/ll_text"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="190.3dp"
-            android:onClick="onHeadClick"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/ll_container"
+            <FrameLayout
+                android:id="@+id/ll_text"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:translationY="0dp"
+                android:layout_height="190.3dp"
+                android:onClick="onHeadClick"
                 android:orientation="vertical">
 
-                <TextView
+                <LinearLayout
+                    android:id="@+id/ll_container"
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:background="#f4d4f4"
-                    android:text="HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH"
-                    android:textSize="40dp"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#6df5f1"
-                    android:text="11111111111111111111111111"
-                    android:textSize="40dp"/>
-            </LinearLayout>
-        </FrameLayout>
+                    android:layout_height="300dp"
+                    android:orientation="vertical"
+                    android:translationY="0dp">
 
-
-        <android.support.v4.widget.NestedScrollView
-            android:id="@+id/nestedScrollView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:background="#f4d4f4"
+                        android:text="HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH"
+                        android:textSize="40dp"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#6df5f1"
+                        android:text="11111111111111111111111111"
+                        android:textSize="40dp"/>
+                </LinearLayout>
+            </FrameLayout>
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:background="#efeea6"
-                android:text="==================================================================================================================================================================================================================================================================================================================="
+                android:layout_height="100dp"
+                android:background="#f4d4f4"
+                android:text="*********************************************"
                 android:textSize="40dp"/>
 
-        </android.support.v4.widget.NestedScrollView>
+            <android.support.v4.widget.NestedScrollView
+                android:id="@+id/nestedScrollView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:background="#efeea6"
+                    android:text="==================================================================================================================================================================================================================================================================================================================="
+                    android:textSize="40dp"/>
 
+            </android.support.v4.widget.NestedScrollView>
 
+        </LinearLayout>
     </com.bing.lan.view.scrollHeader.ScrollHeaderView>
 
 
