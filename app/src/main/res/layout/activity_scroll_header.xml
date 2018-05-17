@@ -21,22 +21,22 @@
             <FrameLayout
                 android:id="@+id/ll_text"
                 android:layout_width="match_parent"
-                android:layout_height="190.3dp"
+                android:layout_height="304.8dp"
                 android:onClick="onHeadClick"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:id="@+id/ll_container"
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"
+                    android:layout_height="320dp"
                     android:orientation="vertical"
                     android:translationY="0dp">
 
                     <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="150dp"
+                        android:layout_height="250dp"
                         android:background="#f4d4f4"
-                        android:text="HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH"
+                        android:text="HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH"
                         android:textSize="40dp"/>
                     <TextView
                         android:layout_width="match_parent"

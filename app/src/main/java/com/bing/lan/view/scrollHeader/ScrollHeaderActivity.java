@@ -64,14 +64,14 @@ public class ScrollHeaderActivity extends AppCompatActivity implements
 
         mLayoutParams.height += (int) headerKeepHight;
 
-        if (mLayoutParams.height > 500) {
-            mLayoutParams.height = 500;
-        } else if (mLayoutParams.height < 200) {
-            mLayoutParams.height = 200;
+        if (mLayoutParams.height > 800) {
+            mLayoutParams.height = 800;
+        } else if (mLayoutParams.height < 100) {
+            mLayoutParams.height = 100;
         }
 
         //ll_container 高度值不能动态变化(match_parent) 即 需要设置固定值 否则 translationY 跟设定的值不同步 ？？
-        ll_container.setTranslationY((mLayoutParams.height - 500));
+        ll_container.setTranslationY((mLayoutParams.height - 800));
         mHeader.requestLayout();
     }
 
@@ -82,6 +82,6 @@ public class ScrollHeaderActivity extends AppCompatActivity implements
 
     @Override
     public boolean isInterceptUpTouchEvent() {
-        return mLayoutParams.height <= 500 && mLayoutParams.height > 200;
+        return mLayoutParams.height <= 800 && mLayoutParams.height > 100;
     }
 }
