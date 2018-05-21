@@ -146,7 +146,7 @@ public class ScrollHeaderView extends FrameLayout {
                 log.i("onTouchEvent() :每秒移动的距离 :" + anglePerSecond);
 
                 // 如果达到最大速度
-                if (Math.abs(anglePerSecond) > 100 && !isMove) {
+                if (Math.abs(anglePerSecond) > 40 && !isMove) {
                     // 惯性滚动
                     log.i("onTouchEvent() :启动惯性");
                     post(mAngleRunnable = new AngleRunnable(anglePerSecond));
@@ -191,25 +191,18 @@ public class ScrollHeaderView extends FrameLayout {
     private class AngleRunnable implements Runnable {
 
         private float angelPerSecond;
-        private float angelPerSecondxx;
+        private int moveTimeInterval = 10;
 
         public AngleRunnable(float velocity) {
             this.angelPerSecond = velocity;
-
-            float abs = Math.abs(angelPerSecond);
-
-            if (abs > 300) {
-                angelPerSecondxx = abs - 260;
-            } else if (abs > 200) {
-                angelPerSecondxx = abs - 140;
-            } else {
-                angelPerSecondxx = abs - 30;
-            }
         }
 
         public void run() {
             //小于20停止
-            if ((int) Math.abs(angelPerSecond) < angelPerSecondxx) {
+            log.i("run() --------------------------------");
+            log.i("run() angelPerSecond:" + angelPerSecond);
+
+            if ((int) Math.abs(angelPerSecond) < 30) {
                 isMove = false;
                 return;
             }
@@ -218,21 +211,14 @@ public class ScrollHeaderView extends FrameLayout {
             //mStartAngle  = mStartAngle + (angelPerSecond / 30);
 
             if (mOnScrollChangeListener != null) {
-                float t = 30;
-                if (isMoveUp) {
-                    t = -1 * t;
-                }
-
-                float v = angelPerSecond * 15 / 100;
-                log.i("onTouchEvent() :惯性移动的距离 :" + v);
-                log.i("onTouchEvent() :惯性移动的距离 angelPerSecond:" + angelPerSecond);
-
+                float v = angelPerSecond * moveTimeInterval * 4 / 100;
+                log.i("run() :惯性移动的距离 :" + v);
                 mOnScrollChangeListener.onScrollChange(ScrollHeaderView.this, v);
             }
 
             //逐渐减小这个值
             angelPerSecond /= 1.0666F;
-            postDelayed(this, 15);
+            postDelayed(this, moveTimeInterval);
         }
     }
 }
